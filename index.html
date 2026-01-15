@@ -570,14 +570,32 @@
         }
 
         async function loadReturnsData() {
-            const response = await fetch(RETURNS_URL);
-            const text = await response.text();
-            const data = JSON.parse(text.substring(47, text.length - 2));
+            // Tentar diferentes nomes de aba
+            const sheetNames = ['Retornos', 'RETORNOS MENSAIS ($)', 'RETORNOS%20MENSAIS%20(%24)'];
+            let data = null;
             
-            if (data.table && data.table.rows) {
+            for (const sheetName of sheetNames) {
+                try {
+                    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+                    const response = await fetch(url);
+                    const text = await response.text();
+                    const parsed = JSON.parse(text.substring(47, text.length - 2));
+                    if (parsed.table && parsed.table.rows && parsed.table.rows.length > 5) {
+                        data = parsed;
+                        console.log('Aba encontrada:', sheetName);
+                        break;
+                    }
+                } catch (e) {
+                    console.log('Tentando próxima aba...');
+                }
+            }
+            
+            if (data && data.table && data.table.rows) {
                 returnsData = { 2025: [], 2026: [] };
                 const rows = data.table.rows;
                 let currentYear = null;
+                
+                console.log('Total de linhas:', rows.length);
                 
                 for (let i = 0; i < rows.length; i++) {
                     const row = rows[i];
@@ -588,9 +606,17 @@
                     
                     const firstCell = String(cellValue).trim();
                     
-                    // Detectar marcador de ano (pode ser número ou string)
-                    if (firstCell === '2025' || cellValue === 2025) { currentYear = 2025; continue; }
-                    if (firstCell === '2026' || cellValue === 2026) { currentYear = 2026; continue; }
+                    // Detectar marcador de ano - mais flexível (contém 2025 ou 2026)
+                    if (firstCell.includes('2025') || cellValue === 2025) { 
+                        currentYear = 2025; 
+                        console.log('Encontrado ano 2025 na linha', i);
+                        continue; 
+                    }
+                    if (firstCell.includes('2026') || cellValue === 2026) { 
+                        currentYear = 2026; 
+                        console.log('Encontrado ano 2026 na linha', i);
+                        continue; 
+                    }
                     
                     // Ignorar headers e linhas de sistema
                     if (firstCell === 'CONTA' || firstCell === 'TOTAL' || firstCell === '' || 
@@ -616,7 +642,11 @@
                     }
                 }
                 
+                console.log('Retornos 2025:', returnsData[2025].length, 'contas');
+                console.log('Retornos 2026:', returnsData[2026].length, 'contas');
                 console.log('Retornos carregados:', returnsData);
+            } else {
+                console.log('Nenhuma aba de retornos encontrada!');
             }
         }
 
