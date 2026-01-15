@@ -323,7 +323,7 @@
             <div class="kpi-section">
                 <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-label">Patrimônio Total</div><div class="kpi-value cyan" id="kpiEquity">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">💼</div><div class="kpi-label">Saldo Total</div><div class="kpi-value purple" id="kpiBalance">$0</div></div>
-                <div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-label">Flutuante</div><div class="kpi-value" id="kpiFloating">$0</div></div>
+                <div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-label">Flutuante</div><div class="kpi-value" id="kpiFloating">$0</div><div class="kpi-sub" id="kpiFloatingPct" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
                 <div class="kpi-card"><div class="kpi-icon">📅</div><div class="kpi-label">Lucro Ano</div><div class="kpi-value green" id="kpiProfitYear">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">💵</div><div class="kpi-label">Lucro Total</div><div class="kpi-value green" id="kpiProfitTotal">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">🔢</div><div class="kpi-label">Contas Ativas</div><div class="kpi-value orange" id="kpiAccounts">0</div></div>
@@ -354,7 +354,7 @@
                     </div>
                 </div>
                 <div class="sidebar-section">
-                    <div class="card"><div class="card-header">🏆 Melhores Desempenhos</div><div class="card-body" id="rankingContainer"></div></div>
+                    <div class="card"><div class="card-header">🏆 Melhores Desempenhos do Dia</div><div class="card-body" id="rankingContainer"></div></div>
                     <div class="card">
                         <div class="card-header">📊 Estatísticas</div>
                         <div class="card-body">
@@ -681,6 +681,12 @@
             const floatEl = document.getElementById('kpiFloating');
             floatEl.textContent = formatCurrency(totals.floating);
             floatEl.className = `kpi-value ${totals.floating >= 0 ? 'green' : 'red'}`;
+            // Calcular % do portfólio (floating / balance * 100)
+            const floatingPct = totals.balance > 0 ? (totals.floating / totals.balance) * 100 : 0;
+            const floatingPctEl = document.getElementById('kpiFloatingPct');
+            const sign = floatingPct >= 0 ? '+' : '';
+            floatingPctEl.textContent = `${sign}${floatingPct.toFixed(2)}% do portfólio`;
+            floatingPctEl.style.color = floatingPct >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
             document.getElementById('kpiProfitYear').textContent = formatCurrency(totals.profitYear);
             document.getElementById('kpiProfitTotal').textContent = formatCurrency(totals.profitTotal);
             document.getElementById('kpiAccounts').textContent = accountsData.length;
@@ -704,7 +710,7 @@
             accountsData.forEach(a => {
                 const row = document.createElement('tr');
                 row.onclick = () => { document.getElementById('analysisAccountSelect').value = a.alias; document.querySelector('[data-page="analysis"]').click(); };
-                row.innerHTML = `<td>${getStatus(a.ddMaxPct)}</td><td class="account-name">${a.alias}</td><td>${formatCurrency(a.balance)}</td><td>${formatCurrency(a.equity)}</td><td class="${getValueClass(a.floatingPL)}">${formatCurrency(a.floatingPL)}</td><td>${formatPercent(a.ddCurrentPct)}</td><td class="value-negative">${formatPercent(a.ddMaxPct)}</td><td class="${getValueClass(a.profitDay)}">${formatCurrency(a.profitDay)}</td><td class="${getValueClass(a.profitWeek)}">${formatCurrency(a.profitWeek)}</td><td class="${getValueClass(a.profitMonth)}">${formatCurrency(a.profitMonth)}</td><td class="${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</td><td class="${getValueClass(a.profitTotalPct)}">${formatPercent(a.profitTotalPct)}</td><td>${a.totalTrades}</td>`;
+                row.innerHTML = `<td>${getStatus(a.ddMaxPct)}</td><td class="account-name">${a.alias}</td><td>${formatCurrency(a.balance)}</td><td>${formatCurrency(a.equity)}</td><td class="${getValueClass(a.floatingPL)}">${formatCurrency(a.floatingPL)}</td><td class="${a.ddCurrentPct > 0 ? 'value-negative' : ''}">${formatPercent(a.ddCurrentPct)}</td><td class="value-negative">${formatPercent(a.ddMaxPct)}</td><td class="${getValueClass(a.profitDay)}">${formatCurrency(a.profitDay)}</td><td class="${getValueClass(a.profitWeek)}">${formatCurrency(a.profitWeek)}</td><td class="${getValueClass(a.profitMonth)}">${formatCurrency(a.profitMonth)}</td><td class="${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</td><td class="${getValueClass(a.profitTotalPct)}">${formatPercent(a.profitTotalPct)}</td><td>${a.totalTrades}</td>`;
                 tbody.appendChild(row);
             });
         }
@@ -712,10 +718,13 @@
         function updateRanking() {
             const container = document.getElementById('rankingContainer');
             container.innerHTML = '';
-            [...accountsData].sort((a, b) => b.profitTotal - a.profitTotal).slice(0, 5).forEach((a, i) => {
+            // Ordenar por lucro do DIA em % (profitDayPct)
+            [...accountsData].sort((a, b) => b.profitDayPct - a.profitDayPct).slice(0, 5).forEach((a, i) => {
                 const pos = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}º`;
                 const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
-                container.innerHTML += `<div class="ranking-item"><div class="ranking-position ${cls}">${pos}</div><div class="ranking-info"><div class="ranking-name">${a.alias}</div><div class="ranking-details">${a.totalTrades} operações</div></div><div class="ranking-profit ${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</div></div>`;
+                const dailyPct = a.profitDayPct || 0;
+                const sign = dailyPct >= 0 ? '+' : '';
+                container.innerHTML += `<div class="ranking-item"><div class="ranking-position ${cls}">${pos}</div><div class="ranking-info"><div class="ranking-name">${a.alias}</div><div class="ranking-details">${a.tradesToday || 0} operações hoje</div></div><div class="ranking-profit ${getValueClass(dailyPct)}">${sign}${formatPercent(dailyPct)}</div></div>`;
             });
         }
 
