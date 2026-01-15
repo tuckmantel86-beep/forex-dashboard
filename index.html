@@ -643,11 +643,12 @@
                     return { account: name, months, total };
                 }
                 
-                // Estrutura da aba Retornos:
-                // Row 0: Headers (CONTA, Jan, Fev...)
-                // Rows 1-30: Contas 2025 (até 30 linhas)
-                // Row ~31: Marcador "📅 2026" ou linha vazia
-                // Rows 32+: Contas 2026
+                // Estrutura da aba Retornos (após query do Google Visualization):
+                // A query já retorna apenas os dados, sem headers
+                // Row 0: Primeira conta 2025 (Recovery500k)
+                // Rows 1-29: Demais contas 2025
+                // Row ~30: Marcador "📅 2026"
+                // Rows 31+: Contas 2026
                 
                 // Encontrar marcador de 2026 dinamicamente
                 let year2026Start = -1;
@@ -666,15 +667,15 @@
                 
                 // Fallback para índice padrão se não encontrar marcador
                 if (year2026Start === -1) {
-                    year2026Start = 32; // Aproximadamente após 30 contas + headers
+                    year2026Start = 32;
                     console.log('>>> Marcador 2026 não encontrado, usando índice padrão 32');
                 }
                 
                 const seen2025 = new Set();
                 const seen2026 = new Set();
                 
-                // Extrair 2025: do índice 1 (após header) até o marcador de 2026
-                const start2025 = 1; // Primeira linha de dados (após header no índice 0)
+                // Extrair 2025: do índice 0 até o marcador de 2026
+                const start2025 = 0; // Primeira linha de dados
                 const end2025 = year2026Start;
                 console.log(`>>> Extraindo 2025: índices ${start2025} a ${end2025 - 1}`);
                 
