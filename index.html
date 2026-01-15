@@ -600,14 +600,14 @@
                 console.log('=== DEBUG RETORNOS ===');
                 console.log('Total de linhas no JSON:', rows.length);
                 
-                // Debug: mostrar onde estão os marcadores de ano
-                for (let i = 0; i < rows.length; i++) {
+                // Debug: mostrar as primeiras 40 linhas para entender a estrutura
+                console.log('--- Primeiras 40 linhas ---');
+                for (let i = 0; i < Math.min(40, rows.length); i++) {
                     const row = rows[i];
                     if (row && row.c && row.c[0]) {
-                        const val = String(row.c[0].v || '');
-                        if (val.includes('2025') || val.includes('2026')) {
-                            console.log(`>>> Marcador encontrado no índice ${i}: "${val}"`);
-                        }
+                        const val = row.c[0].v;
+                        const valStr = String(val || '').substring(0, 30);
+                        console.log(`Linha ${i}: "${valStr}" (tipo: ${typeof val})`);
                     }
                 }
                 
@@ -620,11 +620,11 @@
                     
                     const name = String(accountName).trim();
                     
-                    // Ignorar linhas de sistema
+                    // Ignorar linhas de sistema (marcadores, headers, etc)
                     if (name === '' || name === 'CONTA' || name === 'TOTAL' || 
                         name.includes('RETORNOS') || name.includes('Atualizado') ||
-                        name.includes('📅') || /^\d{4}$/.test(name) ||
-                        name === '2025' || name === '2026') {
+                        name.includes('📅') || name === '2025' || name === '2026' ||
+                        /^[\s📅]*2025[\s]*$/.test(name) || /^[\s📅]*2026[\s]*$/.test(name)) {
                         return null;
                     }
                     
@@ -656,33 +656,53 @@
                     return { account: name, months, total };
                 }
                 
-                // ABORDAGEM DINÂMICA: Encontrar os marcadores de ano e extrair dados entre eles
+                // Função para verificar se uma linha é marcador de ano
+                function isYearMarker(row, year) {
+                    if (!row || !row.c || !row.c[0]) return false;
+                    const val = row.c[0].v;
+                    if (val === null || val === undefined) return false;
+                    const valStr = String(val).trim();
+                    // Verificar se contém o ano (com ou sem emoji)
+                    return valStr.includes(String(year)) || val === year;
+                }
+                
+                // Encontrar os marcadores de ano
                 let year2025Start = -1;
                 let year2026Start = -1;
                 
                 for (let i = 0; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (row && row.c && row.c[0]) {
-                        const val = String(row.c[0].v || '');
-                        if (val.includes('2025') && year2025Start === -1) {
-                            year2025Start = i;
-                            console.log(`2025 começa no índice ${i}`);
-                        }
-                        if (val.includes('2026') && year2026Start === -1) {
-                            year2026Start = i;
-                            console.log(`2026 começa no índice ${i}`);
+                    if (isYearMarker(rows[i], 2025) && year2025Start === -1) {
+                        year2025Start = i;
+                        console.log(`>>> Marcador 2025 encontrado no índice ${i}`);
+                    }
+                    if (isYearMarker(rows[i], 2026) && year2026Start === -1) {
+                        year2026Start = i;
+                        console.log(`>>> Marcador 2026 encontrado no índice ${i}`);
+                    }
+                }
+                
+                // Se não encontrou 2025 mas encontrou 2026, assumir que 2025 começa no índice 4 ou 5
+                if (year2025Start === -1 && year2026Start !== -1) {
+                    // Procurar a primeira conta válida antes de 2026
+                    for (let i = 4; i < year2026Start; i++) {
+                        if (extractAccountData(rows[i])) {
+                            year2025Start = i - 1; // O marcador seria uma linha antes
+                            console.log(`>>> Marcador 2025 inferido no índice ${year2025Start}`);
+                            break;
                         }
                     }
                 }
+                
+                console.log(`2025 começa no índice ${year2025Start}`);
+                console.log(`2026 começa no índice ${year2026Start}`);
                 
                 // Mapa para evitar duplicatas
                 const seen2025 = new Set();
                 const seen2026 = new Set();
                 
-                // Extrair contas de 2025 (da linha após o marcador até o marcador de 2026 ou linha vazia)
-                if (year2025Start !== -1) {
-                    const endIndex = year2026Start !== -1 ? year2026Start : rows.length;
-                    for (let i = year2025Start + 1; i < endIndex; i++) {
+                // Extrair contas de 2025
+                if (year2025Start !== -1 && year2026Start !== -1) {
+                    for (let i = year2025Start + 1; i < year2026Start; i++) {
                         const accountData = extractAccountData(rows[i]);
                         if (accountData && !seen2025.has(accountData.account)) {
                             seen2025.add(accountData.account);
@@ -692,7 +712,7 @@
                     }
                 }
                 
-                // Extrair contas de 2026 (da linha após o marcador até o fim ou próximo marcador)
+                // Extrair contas de 2026
                 if (year2026Start !== -1) {
                     for (let i = year2026Start + 1; i < rows.length; i++) {
                         const accountData = extractAccountData(rows[i]);
