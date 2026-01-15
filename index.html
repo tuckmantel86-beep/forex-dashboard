@@ -43,32 +43,47 @@
 
         header {
             position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            padding: 0.6rem 2rem; background: rgba(10, 10, 15, 0.95);
+            padding: 0.6rem 1rem; background: rgba(10, 10, 15, 0.95);
             backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color);
         }
-        .header-container { max-width: 1900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 12px; }
-        .logo-icon { width: 36px; height: 36px; }
-        .logo-text { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-container { max-width: 1900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        .logo { display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; }
+        .logo-text { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        .mobile-menu-btn svg { display: block; }
+
         .nav-tabs { display: flex; gap: 0.5rem; }
-        .nav-tab { padding: 0.5rem 1.2rem; background: transparent; border: 1px solid transparent; border-radius: 8px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 6px; }
+        .nav-tab { padding: 0.5rem 1rem; background: transparent; border: 1px solid transparent; border-radius: 8px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
         .nav-tab:hover { color: var(--accent-cyan); background: rgba(0, 212, 255, 0.1); }
         .nav-tab.active { color: var(--accent-cyan); background: rgba(0, 212, 255, 0.15); border-color: var(--accent-cyan); }
-        .header-status { display: flex; align-items: center; gap: 1.5rem; }
-        .status-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary); }
+
+        .header-status { display: flex; align-items: center; gap: 1rem; }
+        .status-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary); }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); } 50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); } }
-        .refresh-btn { padding: 0.4rem 0.8rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .refresh-btn { padding: 0.4rem 0.6rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 4px; }
         .refresh-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
         .refresh-btn.loading svg { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        main { padding: 4.5rem 1.5rem 2rem; max-width: 1900px; margin: 0 auto; position: relative; z-index: 1; }
+        main { padding: 4rem 1rem 2rem; max-width: 1900px; margin: 0 auto; position: relative; z-index: 1; }
         .page-section { display: none; }
         .page-section.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .kpi-section { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        /* KPI - 6 cards agora (sem DD Max) */
+        .kpi-section { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
         .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; transition: all 0.3s ease; position: relative; overflow: hidden; }
         .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green)); opacity: 0; transition: opacity 0.3s ease; }
         .kpi-card:hover { transform: translateY(-3px); border-color: var(--accent-cyan); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
@@ -80,24 +95,23 @@
         .kpi-value.purple { color: var(--accent-purple); }
         .kpi-value.green { color: var(--accent-green); }
         .kpi-value.red { color: var(--accent-red); }
-        .kpi-value.gold { color: var(--accent-gold); }
         .kpi-value.orange { color: var(--accent-orange); }
 
         .period-section { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-        .period-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem 1.2rem; text-align: center; }
+        .period-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; text-align: center; }
         .period-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem; }
         .period-value { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 600; }
         .period-value.positive { color: var(--accent-green); }
         .period-value.negative { color: var(--accent-red); }
 
-        .dashboard-grid { display: grid; grid-template-columns: 1fr 350px; gap: 1.5rem; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
         .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
-        .card-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; font-size: 1rem; font-weight: 600; color: var(--accent-cyan); }
+        .card-header { padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; font-size: 1rem; font-weight: 600; color: var(--accent-cyan); }
         .card-body { padding: 1rem; }
 
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .data-table th { padding: 0.8rem 0.6rem; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); white-space: nowrap; }
-        .data-table td { padding: 0.7rem 0.6rem; border-bottom: 1px solid rgba(30, 42, 58, 0.5); white-space: nowrap; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .data-table th { padding: 0.7rem 0.5rem; text-align: left; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .data-table td { padding: 0.6rem 0.5rem; border-bottom: 1px solid rgba(30, 42, 58, 0.5); white-space: nowrap; }
         .data-table tbody tr:hover { background: var(--bg-card-hover); }
         .data-table tbody tr { cursor: pointer; transition: background 0.2s; }
         .account-name { font-weight: 600; color: var(--accent-cyan); }
@@ -106,66 +120,65 @@
         .value-neutral { color: var(--text-secondary); }
 
         .sidebar-section { display: flex; flex-direction: column; gap: 1rem; }
-        .ranking-item { display: flex; align-items: center; gap: 12px; padding: 0.8rem; background: var(--bg-secondary); border-radius: 8px; transition: all 0.2s; }
-        .ranking-item:hover { background: var(--bg-card-hover); }
-        .ranking-position { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; min-width: 30px; }
+        .ranking-item { display: flex; align-items: center; gap: 10px; padding: 0.7rem; background: var(--bg-secondary); border-radius: 8px; }
+        .ranking-position { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; min-width: 28px; }
         .ranking-position.gold { color: #ffd700; }
         .ranking-position.silver { color: #c0c0c0; }
         .ranking-position.bronze { color: #cd7f32; }
         .ranking-info { flex: 1; }
-        .ranking-name { font-weight: 600; font-size: 0.9rem; }
-        .ranking-details { font-size: 0.75rem; color: var(--text-muted); }
-        .ranking-profit { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 600; }
+        .ranking-name { font-weight: 600; font-size: 0.85rem; }
+        .ranking-details { font-size: 0.7rem; color: var(--text-muted); }
+        .ranking-profit { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 600; }
 
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-        .stat-item { background: var(--bg-secondary); padding: 0.8rem; border-radius: 8px; }
-        .stat-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.2rem; }
-        .stat-value { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 600; color: var(--accent-cyan); }
-        .chart-container { height: 200px; padding: 0.5rem; }
-        .legend { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--text-muted); justify-content: flex-end; margin-bottom: 0.5rem; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+        .stat-item { background: var(--bg-secondary); padding: 0.7rem; border-radius: 8px; }
+        .stat-label { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+        .stat-value { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--accent-cyan); }
+        .chart-container { height: 180px; padding: 0.5rem; }
+
+        .legend { display: flex; gap: 1rem; font-size: 0.7rem; color: var(--text-muted); justify-content: flex-end; margin-bottom: 0.5rem; }
         .legend-item { display: flex; align-items: center; gap: 5px; }
         .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
         .legend-dot.green { background: var(--accent-green); }
         .legend-dot.yellow { background: var(--accent-gold); }
         .legend-dot.red { background: var(--accent-red); }
 
-        .analysis-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; }
-        .account-selector { display: flex; align-items: center; gap: 10px; }
-        .account-selector label { color: var(--text-secondary); font-weight: 500; }
-        .account-selector select { padding: 0.6rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-family: 'Rajdhani', sans-serif; font-size: 1rem; cursor: pointer; min-width: 200px; }
+        .analysis-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; flex-wrap: wrap; }
+        .account-selector { display: flex; align-items: center; gap: 8px; }
+        .account-selector label { color: var(--text-secondary); font-weight: 500; font-size: 0.9rem; }
+        .account-selector select { padding: 0.5rem 0.8rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; cursor: pointer; min-width: 180px; }
         .account-selector select:focus { outline: none; border-color: var(--accent-cyan); }
-        .selected-account-info { display: flex; align-items: center; gap: 2rem; flex: 1; }
-        .account-badge { display: flex; align-items: center; gap: 8px; padding: 0.5rem 1rem; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--accent-cyan); border-radius: 20px; }
-        .account-badge-name { font-weight: 700; color: var(--accent-cyan); }
-        .account-badge-broker { font-size: 0.8rem; color: var(--text-secondary); }
+        .account-badge { display: flex; align-items: center; gap: 8px; padding: 0.4rem 0.8rem; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--accent-cyan); border-radius: 20px; }
+        .account-badge-name { font-weight: 700; color: var(--accent-cyan); font-size: 0.9rem; }
+        .account-badge-broker { font-size: 0.75rem; color: var(--text-secondary); }
 
         .analysis-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-        .analysis-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem; }
-        .analysis-card-title { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; }
-        .analysis-card-value { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
-        .analysis-card-sub { font-size: 0.85rem; color: var(--text-secondary); }
+        .analysis-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; }
+        .analysis-card-title { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.6rem; }
+        .analysis-card-value { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .analysis-card-sub { font-size: 0.8rem; color: var(--text-secondary); }
 
         .analysis-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
         .analysis-chart-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; }
-        .analysis-chart-title { font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
-        .analysis-chart-container { height: 250px; }
+        .analysis-chart-title { font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 1rem; }
+        .analysis-chart-container { height: 220px; }
 
-        .returns-controls { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; flex-wrap: wrap; }
+        .returns-controls { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; flex-wrap: wrap; }
         .year-tabs { display: flex; gap: 0.5rem; }
-        .year-tab { padding: 0.5rem 1.2rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .year-tab { padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .year-tab:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
         .year-tab.active { background: rgba(0, 212, 255, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); }
-        .returns-summary { display: flex; gap: 2rem; margin-left: auto; }
+        .returns-summary { display: flex; gap: 1.5rem; margin-left: auto; }
         .returns-summary-item { text-align: center; }
-        .returns-summary-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
-        .returns-summary-value { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 600; }
+        .returns-summary-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+        .returns-summary-value { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 600; }
 
-        .returns-table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
-        .returns-table { width: 100%; border-collapse: collapse; }
-        .returns-table th { padding: 1rem 0.8rem; text-align: center; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); }
-        .returns-table th:first-child { text-align: left; padding-left: 1.2rem; }
-        .returns-table td { padding: 0.8rem; text-align: center; border-bottom: 1px solid rgba(30, 42, 58, 0.5); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
-        .returns-table td:first-child { text-align: left; padding-left: 1.2rem; font-family: 'Rajdhani', sans-serif; font-weight: 600; color: var(--accent-cyan); }
+        .returns-table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow-x: auto; margin-bottom: 1.5rem; }
+        .returns-table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        .returns-table th { padding: 0.8rem 0.6rem; text-align: center; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); }
+        .returns-table th:first-child { text-align: left; padding-left: 1rem; }
+        .returns-table td { padding: 0.7rem 0.6rem; text-align: center; border-bottom: 1px solid rgba(30, 42, 58, 0.5); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+        .returns-table td:first-child { text-align: left; padding-left: 1rem; font-family: 'Rajdhani', sans-serif; font-weight: 600; color: var(--accent-cyan); }
         .returns-table td:last-child { font-weight: 700; background: rgba(0, 212, 255, 0.05); }
         .returns-table tbody tr:hover { background: var(--bg-card-hover); }
         .return-positive { color: var(--accent-green); }
@@ -173,41 +186,88 @@
         .return-zero { color: var(--text-muted); }
 
         .returns-chart-section { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
-        .returns-chart-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem; }
-        .returns-chart-title { font-size: 1rem; color: var(--accent-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
-        .returns-chart-container { height: 300px; }
+        .returns-chart-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; }
+        .returns-chart-title { font-size: 0.95rem; color: var(--accent-cyan); margin-bottom: 1rem; }
+        .returns-chart-container { height: 280px; }
 
-        .evolution-controls { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; flex-wrap: wrap; }
-        .period-filter { display: flex; gap: 0.5rem; }
-        .period-btn { padding: 0.4rem 1rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; }
+        .evolution-controls { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; flex-wrap: wrap; }
+        .period-filter { display: flex; gap: 0.4rem; }
+        .period-btn { padding: 0.4rem 0.8rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; }
         .period-btn:hover, .period-btn.active { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0, 212, 255, 0.1); }
 
-        .evolution-main-chart { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
-        .evolution-chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .evolution-chart-title { font-size: 1.1rem; color: var(--accent-cyan); display: flex; align-items: center; gap: 10px; }
-        .evolution-chart-legend { display: flex; gap: 1.5rem; }
-        .legend-item-evo { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary); }
+        .evolution-main-chart { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; }
+        .evolution-chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .evolution-chart-title { font-size: 1rem; color: var(--accent-cyan); }
+        .evolution-chart-legend { display: flex; gap: 1rem; }
+        .legend-item-evo { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-secondary); }
         .legend-line { width: 20px; height: 3px; border-radius: 2px; }
         .legend-line.lucro { background: var(--accent-cyan); }
         .legend-line.lr { background: var(--accent-orange); }
-        .evolution-chart-container { height: 400px; }
+        .evolution-chart-container { height: 350px; }
 
         .evolution-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
         .evolution-stat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; text-align: center; }
-        .evolution-stat-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        .evolution-stat-value { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 0.2rem; }
-        .evolution-stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .evolution-stat-icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+        .evolution-stat-value { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .evolution-stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
 
-        footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-color); margin-top: 2rem; }
+        footer { text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border-color); margin-top: 2rem; }
 
         .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 15, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease; }
         .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-        .loading-spinner { width: 60px; height: 60px; border: 4px solid var(--border-color); border-top-color: var(--accent-cyan); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
-        .loading-text { font-family: 'Orbitron', sans-serif; color: var(--accent-cyan); font-size: 1rem; }
+        .loading-spinner { width: 50px; height: 50px; border: 4px solid var(--border-color); border-top-color: var(--accent-cyan); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
+        .loading-text { font-family: 'Orbitron', sans-serif; color: var(--accent-cyan); font-size: 0.9rem; }
 
-        @media (max-width: 1400px) { .kpi-section { grid-template-columns: repeat(4, 1fr); } .analysis-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 1200px) { .dashboard-grid { grid-template-columns: 1fr; } .analysis-charts { grid-template-columns: 1fr; } .returns-chart-section { grid-template-columns: 1fr; } }
-        @media (max-width: 900px) { .kpi-section { grid-template-columns: repeat(2, 1fr); } .period-section { grid-template-columns: repeat(2, 1fr); } .nav-tabs { display: none; } .evolution-stats { grid-template-columns: repeat(2, 1fr); } }
+        /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .kpi-section { grid-template-columns: repeat(3, 1fr); }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .analysis-charts { grid-template-columns: 1fr; }
+            .returns-chart-section { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-tabs {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-primary);
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: column;
+                padding: 0.5rem;
+            }
+            .nav-tabs.show { display: flex; }
+            .nav-tab { justify-content: center; padding: 0.8rem; }
+            
+            .header-status { gap: 0.5rem; }
+            .status-item span:last-child { display: none; }
+            .refresh-btn span { display: none; }
+            
+            .kpi-section { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+            .kpi-card { padding: 0.8rem; }
+            .kpi-value { font-size: 1.2rem; }
+            
+            .period-section { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+            .period-card { padding: 0.8rem; }
+            .period-value { font-size: 1.1rem; }
+            
+            .analysis-grid { grid-template-columns: repeat(2, 1fr); }
+            .evolution-stats { grid-template-columns: repeat(2, 1fr); }
+            
+            .logo-text { font-size: 0.8rem; }
+        }
+
+        @media (max-width: 480px) {
+            main { padding: 3.5rem 0.5rem 1rem; }
+            .kpi-section { gap: 0.5rem; }
+            .kpi-card { padding: 0.6rem; }
+            .kpi-icon { font-size: 1.2rem; }
+            .kpi-value { font-size: 1rem; }
+            .kpi-label { font-size: 0.6rem; }
+        }
     </style>
 </head>
 <body>
@@ -227,18 +287,28 @@
                 </svg>
                 <span class="logo-text">FOREX DASHBOARD PRO</span>
             </div>
-            <nav class="nav-tabs">
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <nav class="nav-tabs" id="navTabs">
                 <button class="nav-tab active" data-page="dashboard">📊 Dashboard</button>
                 <button class="nav-tab" data-page="analysis">🔍 Análise</button>
                 <button class="nav-tab" data-page="returns">📈 Retornos</button>
                 <button class="nav-tab" data-page="evolution">📉 Evolução</button>
             </nav>
+
             <div class="header-status">
                 <div class="status-item"><span class="status-dot"></span><span>Online</span></div>
-                <div class="status-item" id="lastUpdate">Carregando...</div>
+                <div class="status-item" id="lastUpdate"></div>
                 <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-                    Atualizar
+                    <span>Atualizar</span>
                 </button>
             </div>
         </div>
@@ -251,7 +321,6 @@
                 <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-label">Patrimônio Total</div><div class="kpi-value cyan" id="kpiEquity">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">💼</div><div class="kpi-label">Saldo Total</div><div class="kpi-value purple" id="kpiBalance">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-label">Flutuante</div><div class="kpi-value" id="kpiFloating">$0</div></div>
-                <div class="kpi-card"><div class="kpi-icon">📉</div><div class="kpi-label">DD Máximo</div><div class="kpi-value red" id="kpiDDMax">0%</div></div>
                 <div class="kpi-card"><div class="kpi-icon">📅</div><div class="kpi-label">Lucro Ano</div><div class="kpi-value green" id="kpiProfitYear">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">💵</div><div class="kpi-label">Lucro Total</div><div class="kpi-value green" id="kpiProfitTotal">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">🔢</div><div class="kpi-label">Contas Ativas</div><div class="kpi-value orange" id="kpiAccounts">0</div></div>
@@ -276,7 +345,7 @@
                     </div>
                     <div class="card-body" style="padding: 0; overflow-x: auto;">
                         <table class="data-table">
-                            <thead><tr><th>ST</th><th>Conta</th><th>Saldo</th><th>Patrimônio</th><th>Flutuante</th><th>DD Atual</th><th>DD Máx</th><th>Dia</th><th>Semana</th><th>Mês</th><th>Total</th><th>Ganho %</th><th>Operações</th></tr></thead>
+                            <thead><tr><th>ST</th><th>Conta</th><th>Saldo</th><th>Patrimônio</th><th>Flutuante</th><th>DD Atual</th><th>DD Máx</th><th>Dia</th><th>Semana</th><th>Mês</th><th>Total</th><th>Ganho %</th><th>Ops</th></tr></thead>
                             <tbody id="accountsBody"></tbody>
                         </table>
                     </div>
@@ -290,9 +359,7 @@
                                 <div class="stat-item"><div class="stat-label">Maior Saldo</div><div class="stat-value" id="statMaxBalance">$0</div></div>
                                 <div class="stat-item"><div class="stat-label">Menor Saldo</div><div class="stat-value" id="statMinBalance">$0</div></div>
                                 <div class="stat-item"><div class="stat-label">Maior Lucro</div><div class="stat-value" id="statMaxProfit">$0</div></div>
-                                <div class="stat-item"><div class="stat-label">Maior DD</div><div class="stat-value" id="statMaxDD" style="color: var(--accent-red)">0%</div></div>
                                 <div class="stat-item"><div class="stat-label">Total Operações</div><div class="stat-value" id="statTotalTrades">0</div></div>
-                                <div class="stat-item"><div class="stat-label">Operações Hoje</div><div class="stat-value" id="statTradesToday">0</div></div>
                             </div>
                         </div>
                     </div>
@@ -305,10 +372,10 @@
         <section class="page-section" id="page-analysis">
             <div class="analysis-header">
                 <div class="account-selector">
-                    <label>Selecionar Conta:</label>
-                    <select id="analysisAccountSelect" onchange="updateAnalysis()"><option value="">-- Escolha uma conta --</option></select>
+                    <label>Conta:</label>
+                    <select id="analysisAccountSelect" onchange="updateAnalysis()"><option value="">-- Escolha --</option></select>
                 </div>
-                <div class="selected-account-info" id="selectedAccountInfo" style="display: none;">
+                <div id="selectedAccountInfo" style="display: none;">
                     <div class="account-badge"><span class="account-badge-name" id="analysisBadgeName">-</span><span class="account-badge-broker" id="analysisBadgeBroker">-</span></div>
                 </div>
             </div>
@@ -328,20 +395,14 @@
             </div>
 
             <div class="analysis-charts">
-                <div class="analysis-chart-card">
-                    <div class="analysis-chart-title">📈 Lucros por Período</div>
-                    <div class="analysis-chart-container"><canvas id="analysisProfitChart"></canvas></div>
-                </div>
-                <div class="analysis-chart-card">
-                    <div class="analysis-chart-title">📈 Curva de Capital</div>
-                    <div class="analysis-chart-container"><canvas id="analysisEvolutionChart"></canvas></div>
-                </div>
+                <div class="analysis-chart-card"><div class="analysis-chart-title">📈 Lucros por Período</div><div class="analysis-chart-container"><canvas id="analysisProfitChart"></canvas></div></div>
+                <div class="analysis-chart-card"><div class="analysis-chart-title">📈 Curva de Capital</div><div class="analysis-chart-container"><canvas id="analysisEvolutionChart"></canvas></div></div>
             </div>
 
             <div class="card">
                 <div class="card-header">📋 Informações Detalhadas</div>
                 <div class="card-body">
-                    <div class="stat-grid" style="grid-template-columns: repeat(6, 1fr);">
+                    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
                         <div class="stat-item"><div class="stat-label">Depósitos</div><div class="stat-value" id="analysisDeposits">$0</div></div>
                         <div class="stat-item"><div class="stat-label">Saques</div><div class="stat-value" id="analysisWithdrawals">$0</div></div>
                         <div class="stat-item"><div class="stat-label">Posições Abertas</div><div class="stat-value" id="analysisOpenPos">0</div></div>
@@ -374,8 +435,8 @@
             </div>
 
             <div class="returns-chart-section">
-                <div class="returns-chart-card"><div class="returns-chart-title">📊 Retornos Mensais (Total)</div><div class="returns-chart-container"><canvas id="returnsBarChart"></canvas></div></div>
-                <div class="returns-chart-card"><div class="returns-chart-title">📈 Acumulado no Ano</div><div class="returns-chart-container"><canvas id="returnsCumulativeChart"></canvas></div></div>
+                <div class="returns-chart-card"><div class="returns-chart-title">📊 Retornos Mensais</div><div class="returns-chart-container"><canvas id="returnsBarChart"></canvas></div></div>
+                <div class="returns-chart-card"><div class="returns-chart-title">📈 Acumulado</div><div class="returns-chart-container"><canvas id="returnsCumulativeChart"></canvas></div></div>
             </div>
         </section>
 
@@ -400,7 +461,7 @@
                     <div class="evolution-chart-title">📈 Curva de Capital</div>
                     <div class="evolution-chart-legend">
                         <div class="legend-item-evo"><span class="legend-line lucro"></span> Lucro</div>
-                        <div class="legend-item-evo"><span class="legend-line lr"></span> Linha de Regressão</div>
+                        <div class="legend-item-evo"><span class="legend-line lr"></span> Regressão</div>
                     </div>
                 </div>
                 <div class="evolution-chart-container"><canvas id="evolutionChart"></canvas></div>
@@ -410,13 +471,13 @@
                 <div class="evolution-stat-card"><div class="evolution-stat-icon">💰</div><div class="evolution-stat-value" id="evoLucroLiquido">$0</div><div class="evolution-stat-label">Lucro Líquido</div></div>
                 <div class="evolution-stat-card"><div class="evolution-stat-icon">📈</div><div class="evolution-stat-value" id="evoRetornoTotal">0%</div><div class="evolution-stat-label">Retorno Total</div></div>
                 <div class="evolution-stat-card"><div class="evolution-stat-icon">📉</div><div class="evolution-stat-value value-negative" id="evoMaxDD">0%</div><div class="evolution-stat-label">Drawdown</div></div>
-                <div class="evolution-stat-card"><div class="evolution-stat-icon">🎯</div><div class="evolution-stat-value" id="evoProfitFactor">0</div><div class="evolution-stat-label">Fator de Lucro</div></div>
-                <div class="evolution-stat-card"><div class="evolution-stat-icon">📊</div><div class="evolution-stat-value" id="evoTotalTrades">0</div><div class="evolution-stat-label">Total Operações</div></div>
+                <div class="evolution-stat-card"><div class="evolution-stat-icon">🎯</div><div class="evolution-stat-value" id="evoProfitFactor">0</div><div class="evolution-stat-label">Fator Lucro</div></div>
+                <div class="evolution-stat-card"><div class="evolution-stat-icon">📊</div><div class="evolution-stat-value" id="evoTotalTrades">0</div><div class="evolution-stat-label">Operações</div></div>
             </div>
         </section>
     </main>
 
-    <footer><p>Forex Dashboard Pro © 2025 | Dados atualizados automaticamente a cada 5 minutos</p></footer>
+    <footer><p>Forex Dashboard Pro © 2025</p></footer>
 
     <script>
         const SHEET_ID = '1GpnklDLzDFRF7HzE9uSaPlVJMbTiPJ5z1ob0SkiVBwc';
@@ -429,13 +490,17 @@
         let returnsBarChart = null, returnsCumulativeChart = null, evolutionChart = null;
         let selectedYear = 2025, selectedPeriodDays = 30;
 
-        // Navigation
+        function toggleMobileMenu() {
+            document.getElementById('navTabs').classList.toggle('show');
+        }
+
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
                 tab.classList.add('active');
                 document.getElementById(`page-${tab.dataset.page}`).classList.add('active');
+                document.getElementById('navTabs').classList.remove('show');
                 if (tab.dataset.page === 'analysis') updateAnalysis();
                 if (tab.dataset.page === 'returns') updateReturnsTable();
                 if (tab.dataset.page === 'evolution') updateEvolution();
@@ -460,18 +525,16 @@
             });
         });
 
-        function formatCurrency(value) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(parseFloat(value) || 0);
-        }
+        function formatCurrency(value) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(parseFloat(value) || 0); }
         function formatPercent(value) { return (parseFloat(value) || 0).toFixed(2) + '%'; }
-        function getStatus(ddMax, profitTotal) { if (ddMax > 50 || profitTotal < 0) return '🔴'; if (ddMax > 30) return '🟡'; return '🟢'; }
-        function getValueClass(value) { const num = parseFloat(value) || 0; if (num > 0) return 'value-positive'; if (num < 0) return 'value-negative'; return 'value-neutral'; }
+        function getStatus(ddMax) { if (ddMax > 50) return '🔴'; if (ddMax > 30) return '🟡'; return '🟢'; }
+        function getValueClass(value) { const num = parseFloat(value) || 0; return num > 0 ? 'value-positive' : num < 0 ? 'value-negative' : 'value-neutral'; }
 
         async function loadData() {
             document.getElementById('refreshBtn').classList.add('loading');
             try {
                 await Promise.all([loadRealtimeData(), loadReturnsData()]);
-                document.getElementById('lastUpdate').textContent = `Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('pt-BR');
             } catch (error) { console.error('Erro:', error); }
             finally {
                 document.getElementById('refreshBtn').classList.remove('loading');
@@ -518,32 +581,42 @@
                 
                 for (let i = 0; i < rows.length; i++) {
                     const row = rows[i];
-                    if (!row || !row.c) continue;
+                    if (!row || !row.c || !row.c[0]) continue;
                     
-                    const firstCell = row.c[0]?.v;
-                    if (!firstCell) continue;
+                    const cellValue = row.c[0].v;
+                    if (cellValue === null || cellValue === undefined) continue;
                     
-                    // Detectar marcador de ano
-                    if (firstCell === '2025' || firstCell === 2025) { currentYear = 2025; continue; }
-                    if (firstCell === '2026' || firstCell === 2026) { currentYear = 2026; continue; }
+                    const firstCell = String(cellValue).trim();
                     
-                    // Ignorar headers e linhas vazias
-                    if (firstCell === 'CONTA' || firstCell === 'TOTAL') continue;
+                    // Detectar marcador de ano (pode ser número ou string)
+                    if (firstCell === '2025' || cellValue === 2025) { currentYear = 2025; continue; }
+                    if (firstCell === '2026' || cellValue === 2026) { currentYear = 2026; continue; }
                     
-                    // Processar dados da conta
-                    if (currentYear && typeof firstCell === 'string' && firstCell.length > 0) {
+                    // Ignorar headers e linhas de sistema
+                    if (firstCell === 'CONTA' || firstCell === 'TOTAL' || firstCell === '' || 
+                        firstCell.includes('RETORNOS') || firstCell.includes('Atualizado')) continue;
+                    
+                    // Processar dados da conta se estamos em um ano válido
+                    if (currentYear && firstCell.length > 0) {
                         const months = [];
-                        for (let m = 1; m <= 12; m++) {
-                            months.push(parseFloat(row.c[m]?.v) || 0);
-                        }
-                        const total = parseFloat(row.c[13]?.v) || months.reduce((a, b) => a + b, 0);
+                        let hasData = false;
                         
-                        // Só adicionar se tiver algum valor
-                        if (total !== 0 || months.some(m => m !== 0)) {
+                        for (let m = 1; m <= 12; m++) {
+                            const val = parseFloat(row.c[m]?.v) || 0;
+                            months.push(val);
+                            if (val !== 0) hasData = true;
+                        }
+                        
+                        const total = parseFloat(row.c[13]?.v) || months.reduce((a, b) => a + b, 0);
+                        if (total !== 0) hasData = true;
+                        
+                        if (hasData) {
                             returnsData[currentYear].push({ account: firstCell, months, total });
                         }
                     }
                 }
+                
+                console.log('Retornos carregados:', returnsData);
             }
         }
 
@@ -565,18 +638,16 @@
         function updateDashboard() {
             const totals = accountsData.reduce((acc, a) => {
                 acc.equity += a.equity; acc.balance += a.balance; acc.floating += a.floatingPL;
-                acc.ddMax = Math.max(acc.ddMax, a.ddMaxPct); acc.profitYear += a.profitYear;
-                acc.profitTotal += a.profitTotal; acc.profitDay += a.profitDay;
-                acc.profitWeek += a.profitWeek; acc.profitMonth += a.profitMonth;
+                acc.profitYear += a.profitYear; acc.profitTotal += a.profitTotal;
+                acc.profitDay += a.profitDay; acc.profitWeek += a.profitWeek; acc.profitMonth += a.profitMonth;
                 return acc;
-            }, { equity: 0, balance: 0, floating: 0, ddMax: 0, profitYear: 0, profitTotal: 0, profitDay: 0, profitWeek: 0, profitMonth: 0 });
+            }, { equity: 0, balance: 0, floating: 0, profitYear: 0, profitTotal: 0, profitDay: 0, profitWeek: 0, profitMonth: 0 });
 
             document.getElementById('kpiEquity').textContent = formatCurrency(totals.equity);
             document.getElementById('kpiBalance').textContent = formatCurrency(totals.balance);
             const floatEl = document.getElementById('kpiFloating');
             floatEl.textContent = formatCurrency(totals.floating);
             floatEl.className = `kpi-value ${totals.floating >= 0 ? 'green' : 'red'}`;
-            document.getElementById('kpiDDMax').textContent = formatPercent(totals.ddMax);
             document.getElementById('kpiProfitYear').textContent = formatCurrency(totals.profitYear);
             document.getElementById('kpiProfitTotal').textContent = formatCurrency(totals.profitTotal);
             document.getElementById('kpiAccounts').textContent = accountsData.length;
@@ -600,7 +671,7 @@
             accountsData.forEach(a => {
                 const row = document.createElement('tr');
                 row.onclick = () => { document.getElementById('analysisAccountSelect').value = a.alias; document.querySelector('[data-page="analysis"]').click(); };
-                row.innerHTML = `<td>${getStatus(a.ddMaxPct, a.profitTotal)}</td><td class="account-name">${a.alias}</td><td>${formatCurrency(a.balance)}</td><td>${formatCurrency(a.equity)}</td><td class="${getValueClass(a.floatingPL)}">${formatCurrency(a.floatingPL)}</td><td>${formatPercent(a.ddCurrentPct)}</td><td class="value-negative">${formatPercent(a.ddMaxPct)}</td><td class="${getValueClass(a.profitDay)}">${formatCurrency(a.profitDay)}</td><td class="${getValueClass(a.profitWeek)}">${formatCurrency(a.profitWeek)}</td><td class="${getValueClass(a.profitMonth)}">${formatCurrency(a.profitMonth)}</td><td class="${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</td><td class="${getValueClass(a.profitTotalPct)}">${formatPercent(a.profitTotalPct)}</td><td>${a.totalTrades}</td>`;
+                row.innerHTML = `<td>${getStatus(a.ddMaxPct)}</td><td class="account-name">${a.alias}</td><td>${formatCurrency(a.balance)}</td><td>${formatCurrency(a.equity)}</td><td class="${getValueClass(a.floatingPL)}">${formatCurrency(a.floatingPL)}</td><td>${formatPercent(a.ddCurrentPct)}</td><td class="value-negative">${formatPercent(a.ddMaxPct)}</td><td class="${getValueClass(a.profitDay)}">${formatCurrency(a.profitDay)}</td><td class="${getValueClass(a.profitWeek)}">${formatCurrency(a.profitWeek)}</td><td class="${getValueClass(a.profitMonth)}">${formatCurrency(a.profitMonth)}</td><td class="${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</td><td class="${getValueClass(a.profitTotalPct)}">${formatPercent(a.profitTotalPct)}</td><td>${a.totalTrades}</td>`;
                 tbody.appendChild(row);
             });
         }
@@ -611,7 +682,7 @@
             [...accountsData].sort((a, b) => b.profitTotal - a.profitTotal).slice(0, 5).forEach((a, i) => {
                 const pos = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}º`;
                 const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
-                container.innerHTML += `<div class="ranking-item"><div class="ranking-position ${cls}">${pos}</div><div class="ranking-info"><div class="ranking-name">${a.alias}</div><div class="ranking-details">DD: ${formatPercent(a.ddMaxPct)} | ${a.totalTrades} operações</div></div><div class="ranking-profit ${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</div></div>`;
+                container.innerHTML += `<div class="ranking-item"><div class="ranking-position ${cls}">${pos}</div><div class="ranking-info"><div class="ranking-name">${a.alias}</div><div class="ranking-details">${a.totalTrades} operações</div></div><div class="ranking-profit ${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</div></div>`;
             });
         }
 
@@ -620,9 +691,7 @@
             document.getElementById('statMaxBalance').textContent = formatCurrency(Math.max(...balances));
             document.getElementById('statMinBalance').textContent = formatCurrency(Math.min(...balances));
             document.getElementById('statMaxProfit').textContent = formatCurrency(Math.max(...accountsData.map(a => a.profitTotal)));
-            document.getElementById('statMaxDD').textContent = formatPercent(Math.max(...accountsData.map(a => a.ddMaxPct)));
             document.getElementById('statTotalTrades').textContent = accountsData.reduce((s, a) => s + a.totalTrades, 0).toLocaleString();
-            document.getElementById('statTradesToday').textContent = accountsData.reduce((s, a) => s + a.tradesToday, 0);
         }
 
         function updateBalanceChart() {
@@ -636,7 +705,6 @@
             });
         }
 
-        // ANÁLISE
         function updateAnalysis() {
             const alias = document.getElementById('analysisAccountSelect').value;
             if (!alias) { document.getElementById('selectedAccountInfo').style.display = 'none'; return; }
@@ -673,7 +741,6 @@
         }
 
         function updateAnalysisCharts(a) {
-            // Gráfico de Lucros por Período
             const ctx1 = document.getElementById('analysisProfitChart').getContext('2d');
             if (analysisProfitChart) analysisProfitChart.destroy();
             analysisProfitChart = new Chart(ctx1, {
@@ -682,39 +749,23 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0' } } } }
             });
 
-            // Gráfico de Curva de Capital (baseado no Lucro Total)
             const ctx2 = document.getElementById('analysisEvolutionChart').getContext('2d');
             if (analysisEvolutionChart) analysisEvolutionChart.destroy();
-            
-            const days = 30;
-            const labels = [];
-            const lucroData = [];
-            const lrData = [];
-            
+            const days = 30, labels = [], lucroData = [], lrData = [];
             for (let i = days; i >= 0; i--) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
+                const date = new Date(); date.setDate(date.getDate() - i);
                 labels.push(date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
                 const progress = (days - i) / days;
-                const variance = Math.sin(i * 0.5) * a.profitTotal * 0.05;
-                lucroData.push(a.profitTotal * progress + variance);
+                lucroData.push(a.profitTotal * progress + Math.sin(i * 0.5) * a.profitTotal * 0.05);
                 lrData.push(a.profitTotal * progress);
             }
-
             analysisEvolutionChart = new Chart(ctx2, {
                 type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'Lucro', data: lucroData, borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)', fill: true, tension: 0.4, pointRadius: 0 },
-                        { label: 'LR', data: lrData, borderColor: '#ffa500', backgroundColor: 'transparent', borderDash: [5, 5], tension: 0, pointRadius: 0 }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0', maxTicksLimit: 8 } } } }
+                data: { labels, datasets: [{ label: 'Lucro', data: lucroData, borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', fill: true, tension: 0.4, pointRadius: 0 }, { label: 'LR', data: lrData, borderColor: '#ffa500', borderDash: [5,5], tension: 0, pointRadius: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0', maxTicksLimit: 6 } } } }
             });
         }
 
-        // RETORNOS
         function updateReturnsTable() {
             const data = returnsData[selectedYear] || [];
             const tbody = document.getElementById('returnsTableBody');
@@ -737,31 +788,25 @@
                 tbody.appendChild(row);
             });
 
-            // Linha TOTAL
             const totalRow = document.createElement('tr');
             totalRow.style.fontWeight = 'bold';
             totalRow.style.background = 'var(--bg-secondary)';
             let totalCells = '<td style="color: var(--accent-gold)">TOTAL</td>';
-            totalByMonth.forEach(v => {
-                const cls = v > 0 ? 'return-positive' : v < 0 ? 'return-negative' : 'return-zero';
-                totalCells += `<td class="${cls}">${formatCurrency(v)}</td>`;
-            });
+            totalByMonth.forEach(v => totalCells += `<td class="${v > 0 ? 'return-positive' : v < 0 ? 'return-negative' : 'return-zero'}">${formatCurrency(v)}</td>`);
             totalCells += `<td class="${grandTotal >= 0 ? 'value-positive' : 'value-negative'}">${formatCurrency(grandTotal)}</td>`;
             totalRow.innerHTML = totalCells;
             tbody.appendChild(totalRow);
 
             document.getElementById('returnsTotalYear').textContent = formatCurrency(grandTotal);
             document.getElementById('returnsTotalYear').className = `returns-summary-value ${grandTotal >= 0 ? 'value-positive' : 'value-negative'}`;
-            const avgMonth = grandTotal / 12;
-            document.getElementById('returnsAvgMonth').textContent = formatCurrency(avgMonth);
-            document.getElementById('returnsAvgMonth').className = `returns-summary-value ${avgMonth >= 0 ? 'value-positive' : 'value-negative'}`;
+            document.getElementById('returnsAvgMonth').textContent = formatCurrency(grandTotal / 12);
+            document.getElementById('returnsAvgMonth').className = `returns-summary-value ${grandTotal >= 0 ? 'value-positive' : 'value-negative'}`;
 
             updateReturnsCharts(totalByMonth);
         }
 
         function updateReturnsCharts(totalByMonth) {
             const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-
             const ctx1 = document.getElementById('returnsBarChart').getContext('2d');
             if (returnsBarChart) returnsBarChart.destroy();
             returnsBarChart = new Chart(ctx1, {
@@ -773,28 +818,22 @@
             const ctx2 = document.getElementById('returnsCumulativeChart').getContext('2d');
             if (returnsCumulativeChart) returnsCumulativeChart.destroy();
             let cum = 0;
-            const cumData = totalByMonth.map(v => { cum += v; return cum; });
             returnsCumulativeChart = new Chart(ctx2, {
                 type: 'line',
-                data: { labels: months, datasets: [{ data: cumData, borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)', fill: true, tension: 0.4 }] },
+                data: { labels: months, datasets: [{ data: totalByMonth.map(v => { cum += v; return cum; }), borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', fill: true, tension: 0.4 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0' } } } }
             });
         }
 
-        // EVOLUÇÃO - Baseado no LUCRO TOTAL (não deposits)
         function updateEvolution() {
             const alias = document.getElementById('evolutionAccountSelect').value;
-            let account = alias === 'all' ? null : accountsData.find(a => a.alias === alias);
-
-            // Valores baseados no LUCRO TOTAL (ignora saques/depósitos)
+            const account = alias === 'all' ? null : accountsData.find(a => a.alias === alias);
             const lucroTotal = account ? account.profitTotal : accountsData.reduce((s, a) => s + a.profitTotal, 0);
-            const lucroTotalPct = account ? account.profitTotalPct : (accountsData.reduce((s, a) => s + a.deposits, 0) > 0 ? (lucroTotal / accountsData.reduce((s, a) => s + a.deposits, 0)) * 100 : 0);
+            const deposits = account ? account.deposits : accountsData.reduce((s, a) => s + a.deposits, 0);
+            const lucroTotalPct = deposits > 0 ? (lucroTotal / deposits) * 100 : 0;
             const ddMax = account ? account.ddMaxPct : Math.max(...accountsData.map(a => a.ddMaxPct));
             const totalTrades = account ? account.totalTrades : accountsData.reduce((s, a) => s + a.totalTrades, 0);
-            const deposits = account ? account.deposits : accountsData.reduce((s, a) => s + a.deposits, 0);
-
-            // Profit Factor simplificado
-            const profitFactor = ddMax > 0 ? (lucroTotalPct / ddMax).toFixed(2) : '0.00';
+            const profitFactor = ddMax > 0 ? (lucroTotalPct / ddMax).toFixed(2) : '0';
 
             document.getElementById('evoLucroLiquido').textContent = formatCurrency(lucroTotal);
             document.getElementById('evoLucroLiquido').className = `evolution-stat-value ${lucroTotal >= 0 ? 'value-positive' : 'value-negative'}`;
@@ -804,44 +843,24 @@
             document.getElementById('evoProfitFactor').textContent = profitFactor;
             document.getElementById('evoTotalTrades').textContent = totalTrades.toLocaleString();
 
-            updateEvolutionChart(lucroTotal, deposits);
+            updateEvolutionChart(lucroTotal);
         }
 
-        function updateEvolutionChart(lucroTotal, deposits) {
+        function updateEvolutionChart(lucroTotal) {
             const ctx = document.getElementById('evolutionChart').getContext('2d');
             if (evolutionChart) evolutionChart.destroy();
-
-            const days = Math.min(selectedPeriodDays, 365);
-            const labels = [];
-            const lucroData = [];
-            const lrData = [];
-
+            const days = Math.min(selectedPeriodDays, 365), labels = [], lucroData = [], lrData = [];
             for (let i = days; i >= 0; i--) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
+                const date = new Date(); date.setDate(date.getDate() - i);
                 labels.push(date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
-                
                 const progress = (days - i) / days;
-                const variance = Math.sin(i * 0.3) * Math.abs(lucroTotal) * 0.08;
-                lucroData.push(lucroTotal * progress + variance);
+                lucroData.push(lucroTotal * progress + Math.sin(i * 0.3) * Math.abs(lucroTotal) * 0.08);
                 lrData.push(lucroTotal * progress);
             }
-
             evolutionChart = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'Lucro', data: lucroData, borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)', fill: true, tension: 0.4, pointRadius: 0 },
-                        { label: 'LR', data: lrData, borderColor: '#ffa500', backgroundColor: 'transparent', borderDash: [5, 5], tension: 0, pointRadius: 0 }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    interaction: { intersect: false, mode: 'index' },
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#141422', titleColor: '#00d4ff', bodyColor: '#fff', callbacks: { label: ctx => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}` } } },
-                    scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0', maxTicksLimit: 10 } } }
-                }
+                data: { labels, datasets: [{ label: 'Lucro', data: lucroData, borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', fill: true, tension: 0.4, pointRadius: 0 }, { label: 'LR', data: lrData, borderColor: '#ffa500', borderDash: [5,5], tension: 0, pointRadius: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => formatCurrency(ctx.raw) } } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0', maxTicksLimit: 10 } } } }
             });
         }
 
