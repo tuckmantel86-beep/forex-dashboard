@@ -421,8 +421,8 @@
         <section class="page-section" id="page-returns">
             <div class="returns-controls">
                 <div class="year-tabs" id="yearTabs">
-                    <button class="year-tab" data-year="2026">2026</button>
-                    <button class="year-tab active" data-year="2025">2025</button>
+                    <button class="year-tab active" data-year="2026">2026</button>
+                    <button class="year-tab" data-year="2025">2025</button>
                 </div>
                 <div class="returns-summary">
                     <div class="returns-summary-item"><div class="returns-summary-label">Total Ano</div><div class="returns-summary-value value-positive" id="returnsTotalYear">$0</div></div>
@@ -491,7 +491,7 @@
         let returnsData = { 2025: [], 2026: [] };
         let balanceChart = null, analysisProfitChart = null, analysisEvolutionChart = null;
         let returnsBarChart = null, returnsCumulativeChart = null, evolutionChart = null;
-        let selectedYear = 2025, selectedPeriodDays = 30;
+        let selectedYear = 2026, selectedPeriodDays = 30;
 
         function toggleMobileMenu() {
             document.getElementById('navTabs').classList.toggle('show');
@@ -600,29 +600,19 @@
                 console.log('=== DEBUG RETORNOS ===');
                 console.log('Total de linhas:', rows.length);
                 
-                // Vamos fazer debug das primeiras linhas para entender a estrutura
-                for (let i = 0; i < Math.min(10, rows.length); i++) {
-                    const row = rows[i];
-                    if (row && row.c && row.c[0]) {
-                        console.log(`Linha ${i}: "${row.c[0].v}" | Col1: ${row.c[1]?.v} | Col2: ${row.c[2]?.v}`);
-                    } else {
-                        console.log(`Linha ${i}: (vazia ou null)`);
-                    }
-                }
-                
-                // Estrutura da planilha (baseado no GS):
-                // Linha 0: Título merged
-                // Linha 1: Subtítulo merged  
-                // Linha 2: Vazia
-                // Linha 3: Headers (CONTA, Jan, Fev, ...)
-                // Linha 4: "📅 2025" merged
-                // Linhas 5-34: 30 contas de 2025
-                // Linha 35: Vazia
-                // Linha 36: "📅 2026" merged
-                // Linhas 37-66: 30 contas de 2026
+                // Estrutura da planilha (baseado no GS v17.1):
+                // Índice 0: Título "RETORNOS MENSAIS ($)" merged
+                // Índice 1: Subtítulo merged  
+                // Índice 2: Vazia
+                // Índice 3: Headers (CONTA, Jan, Fev, ... TOTAL)
+                // Índice 4: "📅 2025" merged
+                // Índices 5-34: 30 slots para contas de 2025
+                // Índice 35: Vazia
+                // Índice 36: "📅 2026" merged
+                // Índices 37-66: 30 slots para contas de 2026
                 
                 // Função para extrair dados de uma conta
-                function extractAccountData(row) {
+                function extractAccountData(row, includeEmpty = false) {
                     if (!row || !row.c) return null;
                     
                     // Pegar nome da conta (coluna A, índice 0)
@@ -632,9 +622,9 @@
                     const name = String(accountName).trim();
                     
                     // Ignorar linhas de sistema
-                    if (name === 'CONTA' || name === 'TOTAL' || 
+                    if (name === '' || name === 'CONTA' || name === 'TOTAL' || 
                         name.includes('RETORNOS') || name.includes('Atualizado') ||
-                        name.includes('📅') || name.includes('2025') || name.includes('2026')) {
+                        name.includes('📅') || /^\d{4}$/.test(name)) {
                         return null;
                     }
                     
@@ -645,7 +635,6 @@
                     for (let m = 1; m <= 12; m++) {
                         let val = 0;
                         if (row.c[m]) {
-                            // Tentar pegar o valor numérico
                             val = parseFloat(row.c[m].v) || 0;
                         }
                         months.push(val);
@@ -662,78 +651,53 @@
                     }
                     if (total !== 0) hasData = true;
                     
-                    if (!hasData) return null;
+                    // Se includeEmpty=false, só retorna se tiver dados
+                    // Se includeEmpty=true, retorna mesmo sem dados (para manter a conta visível)
+                    if (!hasData && !includeEmpty) return null;
                     
                     return { account: name, months, total };
                 }
                 
-                // Procurar os marcadores de ano e extrair dados
-                let currentYear = null;
-                let accountCount2025 = 0;
-                let accountCount2026 = 0;
+                // ABORDAGEM POR POSIÇÃO FIXA (mais confiável)
+                // Baseado na estrutura criada pelo GS v17.1
+                console.log('>>> Usando abordagem por posição fixa...');
                 
-                for (let i = 0; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (!row || !row.c) continue;
-                    
-                    const firstCellValue = row.c[0]?.v;
-                    const firstCell = firstCellValue ? String(firstCellValue).trim() : '';
-                    
-                    // Detectar marcador de ano
-                    if (firstCell.includes('2025') || firstCellValue === 2025) {
-                        currentYear = 2025;
-                        console.log(`>>> Marcador 2025 encontrado na linha ${i}`);
-                        continue;
-                    }
-                    if (firstCell.includes('2026') || firstCellValue === 2026) {
-                        currentYear = 2026;
-                        console.log(`>>> Marcador 2026 encontrado na linha ${i}`);
-                        continue;
-                    }
-                    
-                    // Se estamos em um ano válido, tentar extrair dados
-                    if (currentYear) {
-                        const accountData = extractAccountData(row);
-                        if (accountData) {
-                            returnsData[currentYear].push(accountData);
-                            if (currentYear === 2025) accountCount2025++;
-                            if (currentYear === 2026) accountCount2026++;
-                            console.log(`  Conta ${currentYear}: ${accountData.account} - Total: $${accountData.total}`);
-                        }
+                // Mapa para evitar duplicatas por ano
+                const seen2025 = new Set();
+                const seen2026 = new Set();
+                
+                // 2025: índices 5-34 (30 slots)
+                for (let i = 5; i <= 34 && i < rows.length; i++) {
+                    const accountData = extractAccountData(rows[i], true);
+                    if (accountData && !seen2025.has(accountData.account)) {
+                        seen2025.add(accountData.account);
+                        returnsData[2025].push(accountData);
+                        console.log(`  2025[${i}]: ${accountData.account} - Total: $${accountData.total}`);
                     }
                 }
                 
-                console.log('=== RESULTADO ===');
+                // 2026: índices 37-66 (30 slots)
+                for (let i = 37; i <= 66 && i < rows.length; i++) {
+                    const accountData = extractAccountData(rows[i], true);
+                    if (accountData && !seen2026.has(accountData.account)) {
+                        seen2026.add(accountData.account);
+                        returnsData[2026].push(accountData);
+                        console.log(`  2026[${i}]: ${accountData.account} - Total: $${accountData.total}`);
+                    }
+                }
+                
+                console.log('=== RESULTADO FINAL ===');
+                console.log(`2025: ${returnsData[2025].length} contas`);
+                console.log(`2026: ${returnsData[2026].length} contas`);
+                
+                // Filtrar contas sem dados apenas na exibição (manter todas)
+                // Remover apenas contas completamente vazias (total = 0 e todos meses = 0)
+                returnsData[2025] = returnsData[2025].filter(a => a.total !== 0 || a.months.some(m => m !== 0));
+                returnsData[2026] = returnsData[2026].filter(a => a.total !== 0 || a.months.some(m => m !== 0));
+                
+                console.log('=== APÓS FILTRO (sem vazias) ===');
                 console.log(`2025: ${returnsData[2025].length} contas com dados`);
                 console.log(`2026: ${returnsData[2026].length} contas com dados`);
-                
-                // Se não encontrou dados de 2025 mas encontrou de 2026, 
-                // pode ser que a estrutura esteja diferente - tentar abordagem por posição fixa
-                if (returnsData[2025].length === 0 && rows.length > 40) {
-                    console.log('>>> Tentando abordagem por posição fixa...');
-                    
-                    // Posições fixas baseadas na estrutura do GS
-                    // 2025: linhas 5-34 (índices 5-34)
-                    // 2026: linhas 37-66 (índices 37-66)
-                    
-                    for (let i = 5; i < 35 && i < rows.length; i++) {
-                        const accountData = extractAccountData(rows[i]);
-                        if (accountData) {
-                            returnsData[2025].push(accountData);
-                        }
-                    }
-                    
-                    for (let i = 37; i < 67 && i < rows.length; i++) {
-                        const accountData = extractAccountData(rows[i]);
-                        if (accountData) {
-                            returnsData[2026].push(accountData);
-                        }
-                    }
-                    
-                    console.log('>>> Após posição fixa:');
-                    console.log(`2025: ${returnsData[2025].length} contas`);
-                    console.log(`2026: ${returnsData[2026].length} contas`);
-                }
                 
             } else {
                 console.log('Nenhuma aba de retornos encontrada!');
