@@ -598,24 +598,23 @@
                 const rows = data.table.rows;
                 
                 console.log('=== DEBUG RETORNOS ===');
-                console.log('Total de linhas:', rows.length);
+                console.log('Total de linhas no JSON:', rows.length);
                 
-                // Estrutura da planilha (baseado no GS v17.1):
-                // Índice 0: Título "RETORNOS MENSAIS ($)" merged
-                // Índice 1: Subtítulo merged  
-                // Índice 2: Vazia
-                // Índice 3: Headers (CONTA, Jan, Fev, ... TOTAL)
-                // Índice 4: "📅 2025" merged
-                // Índices 5-34: 30 slots para contas de 2025
-                // Índice 35: Vazia
-                // Índice 36: "📅 2026" merged
-                // Índices 37-66: 30 slots para contas de 2026
+                // Debug: mostrar onde estão os marcadores de ano
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row && row.c && row.c[0]) {
+                        const val = String(row.c[0].v || '');
+                        if (val.includes('2025') || val.includes('2026')) {
+                            console.log(`>>> Marcador encontrado no índice ${i}: "${val}"`);
+                        }
+                    }
+                }
                 
                 // Função para extrair dados de uma conta
-                function extractAccountData(row, includeEmpty = false) {
+                function extractAccountData(row) {
                     if (!row || !row.c) return null;
                     
-                    // Pegar nome da conta (coluna A, índice 0)
                     const accountName = row.c[0]?.v;
                     if (!accountName || accountName === '' || accountName === null) return null;
                     
@@ -624,7 +623,8 @@
                     // Ignorar linhas de sistema
                     if (name === '' || name === 'CONTA' || name === 'TOTAL' || 
                         name.includes('RETORNOS') || name.includes('Atualizado') ||
-                        name.includes('📅') || /^\d{4}$/.test(name)) {
+                        name.includes('📅') || /^\d{4}$/.test(name) ||
+                        name === '2025' || name === '2026') {
                         return null;
                     }
                     
@@ -651,51 +651,60 @@
                     }
                     if (total !== 0) hasData = true;
                     
-                    // Se includeEmpty=false, só retorna se tiver dados
-                    // Se includeEmpty=true, retorna mesmo sem dados (para manter a conta visível)
-                    if (!hasData && !includeEmpty) return null;
+                    if (!hasData) return null;
                     
                     return { account: name, months, total };
                 }
                 
-                // ABORDAGEM POR POSIÇÃO FIXA (mais confiável)
-                // Baseado na estrutura criada pelo GS v17.1
-                console.log('>>> Usando abordagem por posição fixa...');
+                // ABORDAGEM DINÂMICA: Encontrar os marcadores de ano e extrair dados entre eles
+                let year2025Start = -1;
+                let year2026Start = -1;
                 
-                // Mapa para evitar duplicatas por ano
-                const seen2025 = new Set();
-                const seen2026 = new Set();
-                
-                // 2025: índices 5-34 (30 slots)
-                for (let i = 5; i <= 34 && i < rows.length; i++) {
-                    const accountData = extractAccountData(rows[i], true);
-                    if (accountData && !seen2025.has(accountData.account)) {
-                        seen2025.add(accountData.account);
-                        returnsData[2025].push(accountData);
-                        console.log(`  2025[${i}]: ${accountData.account} - Total: $${accountData.total}`);
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row && row.c && row.c[0]) {
+                        const val = String(row.c[0].v || '');
+                        if (val.includes('2025') && year2025Start === -1) {
+                            year2025Start = i;
+                            console.log(`2025 começa no índice ${i}`);
+                        }
+                        if (val.includes('2026') && year2026Start === -1) {
+                            year2026Start = i;
+                            console.log(`2026 começa no índice ${i}`);
+                        }
                     }
                 }
                 
-                // 2026: índices 37-66 (30 slots)
-                for (let i = 37; i <= 66 && i < rows.length; i++) {
-                    const accountData = extractAccountData(rows[i], true);
-                    if (accountData && !seen2026.has(accountData.account)) {
-                        seen2026.add(accountData.account);
-                        returnsData[2026].push(accountData);
-                        console.log(`  2026[${i}]: ${accountData.account} - Total: $${accountData.total}`);
+                // Mapa para evitar duplicatas
+                const seen2025 = new Set();
+                const seen2026 = new Set();
+                
+                // Extrair contas de 2025 (da linha após o marcador até o marcador de 2026 ou linha vazia)
+                if (year2025Start !== -1) {
+                    const endIndex = year2026Start !== -1 ? year2026Start : rows.length;
+                    for (let i = year2025Start + 1; i < endIndex; i++) {
+                        const accountData = extractAccountData(rows[i]);
+                        if (accountData && !seen2025.has(accountData.account)) {
+                            seen2025.add(accountData.account);
+                            returnsData[2025].push(accountData);
+                            console.log(`  2025[${i}]: ${accountData.account} - Total: $${accountData.total}`);
+                        }
+                    }
+                }
+                
+                // Extrair contas de 2026 (da linha após o marcador até o fim ou próximo marcador)
+                if (year2026Start !== -1) {
+                    for (let i = year2026Start + 1; i < rows.length; i++) {
+                        const accountData = extractAccountData(rows[i]);
+                        if (accountData && !seen2026.has(accountData.account)) {
+                            seen2026.add(accountData.account);
+                            returnsData[2026].push(accountData);
+                            console.log(`  2026[${i}]: ${accountData.account} - Total: $${accountData.total}`);
+                        }
                     }
                 }
                 
                 console.log('=== RESULTADO FINAL ===');
-                console.log(`2025: ${returnsData[2025].length} contas`);
-                console.log(`2026: ${returnsData[2026].length} contas`);
-                
-                // Filtrar contas sem dados apenas na exibição (manter todas)
-                // Remover apenas contas completamente vazias (total = 0 e todos meses = 0)
-                returnsData[2025] = returnsData[2025].filter(a => a.total !== 0 || a.months.some(m => m !== 0));
-                returnsData[2026] = returnsData[2026].filter(a => a.total !== 0 || a.months.some(m => m !== 0));
-                
-                console.log('=== APÓS FILTRO (sem vazias) ===');
                 console.log(`2025: ${returnsData[2025].length} contas com dados`);
                 console.log(`2026: ${returnsData[2026].length} contas com dados`);
                 
