@@ -644,44 +644,37 @@
                 }
                 
                 // Estrutura da aba Retornos:
-                // Row 0: Título | Row 1: Subtítulo | Row 2: vazio | Row 3: Headers
-                // Row 4: "📅 2025" | Rows 5-34: Contas 2025 (30 linhas)
-                // Row 35: vazio | Row 36: "📅 2026" | Rows 37-66: Contas 2026 (30 linhas)
+                // Row 0: Headers (CONTA, Jan, Fev...)
+                // Rows 1-30: Contas 2025 (até 30 linhas)
+                // Row ~31: Marcador "📅 2026" ou linha vazia
+                // Rows 32+: Contas 2026
                 
-                // Encontrar marcadores de ano dinamicamente
-                let year2025Start = -1;
+                // Encontrar marcador de 2026 dinamicamente
                 let year2026Start = -1;
                 
                 for (let i = 0; i < rows.length; i++) {
                     const row = rows[i];
                     if (row && row.c && row.c[0]) {
                         const val = String(row.c[0].v || '');
-                        if (val.includes('2025') && year2025Start === -1) {
-                            year2025Start = i;
-                            console.log(`>>> Marcador 2025 encontrado no índice ${i}: "${val}"`);
-                        }
-                        if (val.includes('2026') && year2026Start === -1) {
+                        if (val.includes('2026')) {
                             year2026Start = i;
                             console.log(`>>> Marcador 2026 encontrado no índice ${i}: "${val}"`);
+                            break;
                         }
                     }
                 }
                 
-                // Fallback para índices padrão baseados na estrutura do GS
-                if (year2025Start === -1) {
-                    year2025Start = 4; // Row 5 (índice 4) no GS
-                    console.log('>>> Marcador 2025 não encontrado, usando índice padrão 4');
-                }
+                // Fallback para índice padrão se não encontrar marcador
                 if (year2026Start === -1) {
-                    year2026Start = 36; // Row 37 (índice 36) no GS
-                    console.log('>>> Marcador 2026 não encontrado, usando índice padrão 36');
+                    year2026Start = 32; // Aproximadamente após 30 contas + headers
+                    console.log('>>> Marcador 2026 não encontrado, usando índice padrão 32');
                 }
                 
                 const seen2025 = new Set();
                 const seen2026 = new Set();
                 
-                // Extrair 2025: do marcador+1 até o marcador de 2026-1
-                const start2025 = year2025Start + 1;
+                // Extrair 2025: do índice 1 (após header) até o marcador de 2026
+                const start2025 = 1; // Primeira linha de dados (após header no índice 0)
                 const end2025 = year2026Start;
                 console.log(`>>> Extraindo 2025: índices ${start2025} a ${end2025 - 1}`);
                 
