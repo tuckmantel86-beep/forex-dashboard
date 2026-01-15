@@ -573,8 +573,7 @@
         }
 
         async function loadReturnsData() {
-            // Tentar diferentes nomes de aba
-            const sheetNames = ['Retornos', 'RETORNOS MENSAIS ($)', 'RETORNOS%20MENSAIS%20(%24)'];
+            const sheetNames = ['Retornos'];
             let data = null;
             
             for (const sheetName of sheetNames) {
@@ -589,7 +588,7 @@
                         break;
                     }
                 } catch (e) {
-                    console.log('Tentando próxima aba...');
+                    console.log('Erro ao buscar aba:', e);
                 }
             }
             
@@ -598,18 +597,7 @@
                 const rows = data.table.rows;
                 
                 console.log('=== DEBUG RETORNOS ===');
-                console.log('Total de linhas no JSON:', rows.length);
-                
-                // Debug: mostrar as primeiras 40 linhas para entender a estrutura
-                console.log('--- Primeiras 40 linhas ---');
-                for (let i = 0; i < Math.min(40, rows.length); i++) {
-                    const row = rows[i];
-                    if (row && row.c && row.c[0]) {
-                        const val = row.c[0].v;
-                        const valStr = String(val || '').substring(0, 30);
-                        console.log(`Linha ${i}: "${valStr}" (tipo: ${typeof val})`);
-                    }
-                }
+                console.log('Total de linhas:', rows.length);
                 
                 // Função para extrair dados de uma conta
                 function extractAccountData(row) {
@@ -620,11 +608,11 @@
                     
                     const name = String(accountName).trim();
                     
-                    // Ignorar linhas de sistema (marcadores, headers, etc)
+                    // Ignorar linhas de sistema
                     if (name === '' || name === 'CONTA' || name === 'TOTAL' || 
                         name.includes('RETORNOS') || name.includes('Atualizado') ||
                         name.includes('📅') || name === '2025' || name === '2026' ||
-                        /^[\s📅]*2025[\s]*$/.test(name) || /^[\s📅]*2026[\s]*$/.test(name)) {
+                        name.includes('2025') || name.includes('2026')) {
                         return null;
                     }
                     
@@ -656,77 +644,57 @@
                     return { account: name, months, total };
                 }
                 
-                // Função para verificar se uma linha é marcador de ano
-                function isYearMarker(row, year) {
-                    if (!row || !row.c || !row.c[0]) return false;
-                    const val = row.c[0].v;
-                    if (val === null || val === undefined) return false;
-                    const valStr = String(val).trim();
-                    // Verificar se contém o ano (com ou sem emoji)
-                    return valStr.includes(String(year)) || val === year;
-                }
-                
-                // Encontrar os marcadores de ano
-                let year2025Start = -1;
+                // Encontrar onde está o marcador de 2026
                 let year2026Start = -1;
-                
                 for (let i = 0; i < rows.length; i++) {
-                    if (isYearMarker(rows[i], 2025) && year2025Start === -1) {
-                        year2025Start = i;
-                        console.log(`>>> Marcador 2025 encontrado no índice ${i}`);
-                    }
-                    if (isYearMarker(rows[i], 2026) && year2026Start === -1) {
-                        year2026Start = i;
-                        console.log(`>>> Marcador 2026 encontrado no índice ${i}`);
-                    }
-                }
-                
-                // Se não encontrou 2025 mas encontrou 2026, assumir que 2025 começa no índice 4 ou 5
-                if (year2025Start === -1 && year2026Start !== -1) {
-                    // Procurar a primeira conta válida antes de 2026
-                    for (let i = 4; i < year2026Start; i++) {
-                        if (extractAccountData(rows[i])) {
-                            year2025Start = i - 1; // O marcador seria uma linha antes
-                            console.log(`>>> Marcador 2025 inferido no índice ${year2025Start}`);
+                    const row = rows[i];
+                    if (row && row.c && row.c[0]) {
+                        const val = String(row.c[0].v || '');
+                        if (val.includes('2026')) {
+                            year2026Start = i;
+                            console.log(`>>> Marcador 2026 encontrado no índice ${i}`);
                             break;
                         }
                     }
                 }
                 
-                console.log(`2025 começa no índice ${year2025Start}`);
-                console.log(`2026 começa no índice ${year2026Start}`);
+                // Se não encontrou 2026, assumir que está no índice 30 (baseado nos logs anteriores)
+                if (year2026Start === -1) {
+                    year2026Start = 30;
+                    console.log('>>> Marcador 2026 não encontrado, usando índice padrão 30');
+                }
                 
-                // Mapa para evitar duplicatas
+                // 2025: do índice 5 até year2026Start-1
+                // 2026: do índice year2026Start+1 até o fim
+                
                 const seen2025 = new Set();
                 const seen2026 = new Set();
                 
-                // Extrair contas de 2025
-                if (year2025Start !== -1 && year2026Start !== -1) {
-                    for (let i = year2025Start + 1; i < year2026Start; i++) {
-                        const accountData = extractAccountData(rows[i]);
-                        if (accountData && !seen2025.has(accountData.account)) {
-                            seen2025.add(accountData.account);
-                            returnsData[2025].push(accountData);
-                            console.log(`  2025[${i}]: ${accountData.account} - Total: $${accountData.total}`);
-                        }
+                // Extrair 2025 (índices 5 até year2026Start-1)
+                console.log(`>>> Extraindo 2025: índices 5 a ${year2026Start - 1}`);
+                for (let i = 5; i < year2026Start; i++) {
+                    const accountData = extractAccountData(rows[i]);
+                    if (accountData && !seen2025.has(accountData.account)) {
+                        seen2025.add(accountData.account);
+                        returnsData[2025].push(accountData);
+                        console.log(`  2025[${i}]: ${accountData.account} - Total: $${accountData.total}`);
                     }
                 }
                 
-                // Extrair contas de 2026
-                if (year2026Start !== -1) {
-                    for (let i = year2026Start + 1; i < rows.length; i++) {
-                        const accountData = extractAccountData(rows[i]);
-                        if (accountData && !seen2026.has(accountData.account)) {
-                            seen2026.add(accountData.account);
-                            returnsData[2026].push(accountData);
-                            console.log(`  2026[${i}]: ${accountData.account} - Total: $${accountData.total}`);
-                        }
+                // Extrair 2026 (índices year2026Start+1 até o fim)
+                console.log(`>>> Extraindo 2026: índices ${year2026Start + 1} em diante`);
+                for (let i = year2026Start + 1; i < rows.length; i++) {
+                    const accountData = extractAccountData(rows[i]);
+                    if (accountData && !seen2026.has(accountData.account)) {
+                        seen2026.add(accountData.account);
+                        returnsData[2026].push(accountData);
+                        console.log(`  2026[${i}]: ${accountData.account} - Total: $${accountData.total}`);
                     }
                 }
                 
                 console.log('=== RESULTADO FINAL ===');
-                console.log(`2025: ${returnsData[2025].length} contas com dados`);
-                console.log(`2026: ${returnsData[2026].length} contas com dados`);
+                console.log(`2025: ${returnsData[2025].length} contas`);
+                console.log(`2026: ${returnsData[2026].length} contas`);
                 
             } else {
                 console.log('Nenhuma aba de retornos encontrada!');
