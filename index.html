@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forex Dashboard Pro</title>
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
@@ -33,170 +30,49 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-primary); }
         ::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
 
         .bg-grid {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px; pointer-events: none; z-index: 0;
         }
 
         header {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            padding: 0.6rem 2rem;
-            background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 0.6rem 2rem; background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color);
         }
-
-        .header-container {
-            max-width: 1900px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .header-container { max-width: 1900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; }
         .logo-icon { width: 36px; height: 36px; }
-
-        .logo-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
+        .logo-text { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .nav-tabs { display: flex; gap: 0.5rem; }
-
-        .nav-tab {
-            padding: 0.5rem 1.2rem;
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
+        .nav-tab { padding: 0.5rem 1.2rem; background: transparent; border: 1px solid transparent; border-radius: 8px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 6px; }
         .nav-tab:hover { color: var(--accent-cyan); background: rgba(0, 212, 255, 0.1); }
         .nav-tab.active { color: var(--accent-cyan); background: rgba(0, 212, 255, 0.15); border-color: var(--accent-cyan); }
-
         .header-status { display: flex; align-items: center; gap: 1.5rem; }
-
         .status-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary); }
-
-        .status-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--accent-green);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
-            50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); }
-        }
-
-        .refresh-btn {
-            padding: 0.4rem 0.8rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-secondary);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); } 50% { opacity: 0.8; box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); } }
+        .refresh-btn { padding: 0.4rem 0.8rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; }
         .refresh-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
         .refresh-btn.loading svg { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        main {
-            padding: 4.5rem 1.5rem 2rem;
-            max-width: 1900px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
+        main { padding: 4.5rem 1.5rem 2rem; max-width: 1900px; margin: 0 auto; position: relative; z-index: 1; }
         .page-section { display: none; }
         .page-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* KPI Cards */
-        .kpi-section {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .kpi-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .kpi-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
+        .kpi-section { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green)); opacity: 0; transition: opacity 0.3s ease; }
         .kpi-card:hover { transform: translateY(-3px); border-color: var(--accent-cyan); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
         .kpi-card:hover::before { opacity: 1; }
-
         .kpi-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
         .kpi-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.2rem; }
         .kpi-value { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; }
@@ -207,87 +83,30 @@
         .kpi-value.gold { color: var(--accent-gold); }
         .kpi-value.orange { color: var(--accent-orange); }
 
-        /* Period Cards */
-        .period-section {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .period-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 1rem 1.2rem;
-            text-align: center;
-        }
-
+        .period-section { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .period-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem 1.2rem; text-align: center; }
         .period-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem; }
         .period-value { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 600; }
         .period-value.positive { color: var(--accent-green); }
         .period-value.negative { color: var(--accent-red); }
 
-        /* Grid Layouts */
         .dashboard-grid { display: grid; grid-template-columns: 1fr 350px; gap: 1.5rem; }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1rem 1.2rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--accent-cyan);
-        }
-
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .card-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; font-size: 1rem; font-weight: 600; color: var(--accent-cyan); }
         .card-body { padding: 1rem; }
 
-        /* Tables */
         .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .data-table th {
-            padding: 0.8rem 0.6rem;
-            text-align: left;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border-color);
-            white-space: nowrap;
-        }
-        .data-table td {
-            padding: 0.7rem 0.6rem;
-            border-bottom: 1px solid rgba(30, 42, 58, 0.5);
-            white-space: nowrap;
-        }
+        .data-table th { padding: 0.8rem 0.6rem; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .data-table td { padding: 0.7rem 0.6rem; border-bottom: 1px solid rgba(30, 42, 58, 0.5); white-space: nowrap; }
         .data-table tbody tr:hover { background: var(--bg-card-hover); }
         .data-table tbody tr { cursor: pointer; transition: background 0.2s; }
         .account-name { font-weight: 600; color: var(--accent-cyan); }
         .value-positive { color: var(--accent-green); }
         .value-negative { color: var(--accent-red); }
         .value-neutral { color: var(--text-secondary); }
-        .status-badge { font-size: 0.9rem; }
 
-        /* Sidebar */
         .sidebar-section { display: flex; flex-direction: column; gap: 1rem; }
-
-        .ranking-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0.8rem;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
+        .ranking-item { display: flex; align-items: center; gap: 12px; padding: 0.8rem; background: var(--bg-secondary); border-radius: 8px; transition: all 0.2s; }
         .ranking-item:hover { background: var(--bg-card-hover); }
         .ranking-position { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; min-width: 30px; }
         .ranking-position.gold { color: #ffd700; }
@@ -303,7 +122,6 @@
         .stat-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.2rem; }
         .stat-value { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 600; color: var(--accent-cyan); }
         .chart-container { height: 200px; padding: 0.5rem; }
-
         .legend { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--text-muted); justify-content: flex-end; margin-bottom: 0.5rem; }
         .legend-item { display: flex; align-items: center; gap: 5px; }
         .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -311,60 +129,18 @@
         .legend-dot.yellow { background: var(--accent-gold); }
         .legend-dot.red { background: var(--accent-red); }
 
-        /* Analysis Page */
-        .analysis-header {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-        }
-
+        .analysis-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; }
         .account-selector { display: flex; align-items: center; gap: 10px; }
         .account-selector label { color: var(--text-secondary); font-weight: 500; }
-        .account-selector select {
-            padding: 0.6rem 1rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
-            cursor: pointer;
-            min-width: 200px;
-        }
+        .account-selector select { padding: 0.6rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-family: 'Rajdhani', sans-serif; font-size: 1rem; cursor: pointer; min-width: 200px; }
         .account-selector select:focus { outline: none; border-color: var(--accent-cyan); }
-
         .selected-account-info { display: flex; align-items: center; gap: 2rem; flex: 1; }
-
-        .account-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid var(--accent-cyan);
-            border-radius: 20px;
-        }
+        .account-badge { display: flex; align-items: center; gap: 8px; padding: 0.5rem 1rem; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--accent-cyan); border-radius: 20px; }
         .account-badge-name { font-weight: 700; color: var(--accent-cyan); }
         .account-badge-broker { font-size: 0.8rem; color: var(--text-secondary); }
 
-        .analysis-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .analysis-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.2rem;
-        }
+        .analysis-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .analysis-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.2rem; }
         .analysis-card-title { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; }
         .analysis-card-value { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
         .analysis-card-sub { font-size: 0.85rem; color: var(--text-secondary); }
@@ -374,67 +150,21 @@
         .analysis-chart-title { font-size: 0.9rem; color: var(--accent-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
         .analysis-chart-container { height: 250px; }
 
-        /* Returns Page */
-        .returns-controls {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            flex-wrap: wrap;
-        }
-
+        .returns-controls { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; flex-wrap: wrap; }
         .year-tabs { display: flex; gap: 0.5rem; }
-        .year-tab {
-            padding: 0.5rem 1.2rem;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-secondary);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .year-tab { padding: 0.5rem 1.2rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .year-tab:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
         .year-tab.active { background: rgba(0, 212, 255, 0.15); border-color: var(--accent-cyan); color: var(--accent-cyan); }
-
         .returns-summary { display: flex; gap: 2rem; margin-left: auto; }
         .returns-summary-item { text-align: center; }
         .returns-summary-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
         .returns-summary-value { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 600; }
 
-        .returns-table-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-        }
-
+        .returns-table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
         .returns-table { width: 100%; border-collapse: collapse; }
-        .returns-table th {
-            padding: 1rem 0.8rem;
-            text-align: center;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-        }
+        .returns-table th { padding: 1rem 0.8rem; text-align: center; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); }
         .returns-table th:first-child { text-align: left; padding-left: 1.2rem; }
-        .returns-table td {
-            padding: 0.8rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(30, 42, 58, 0.5);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-        }
+        .returns-table td { padding: 0.8rem; text-align: center; border-bottom: 1px solid rgba(30, 42, 58, 0.5); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
         .returns-table td:first-child { text-align: left; padding-left: 1.2rem; font-family: 'Rajdhani', sans-serif; font-weight: 600; color: var(--accent-cyan); }
         .returns-table td:last-child { font-weight: 700; background: rgba(0, 212, 255, 0.05); }
         .returns-table tbody tr:hover { background: var(--bg-card-hover); }
@@ -447,47 +177,19 @@
         .returns-chart-title { font-size: 1rem; color: var(--accent-cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
         .returns-chart-container { height: 300px; }
 
-        /* Evolution Page */
-        .evolution-controls {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            flex-wrap: wrap;
-        }
-
+        .evolution-controls { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; flex-wrap: wrap; }
         .period-filter { display: flex; gap: 0.5rem; }
-        .period-btn {
-            padding: 0.4rem 1rem;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-secondary);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .period-btn { padding: 0.4rem 1rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-secondary); font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; }
         .period-btn:hover, .period-btn.active { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0, 212, 255, 0.1); }
 
-        .evolution-main-chart {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
+        .evolution-main-chart { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
         .evolution-chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .evolution-chart-title { font-size: 1.1rem; color: var(--accent-cyan); display: flex; align-items: center; gap: 10px; }
         .evolution-chart-legend { display: flex; gap: 1.5rem; }
         .legend-item-evo { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-secondary); }
         .legend-line { width: 20px; height: 3px; border-radius: 2px; }
-        .legend-line.equity { background: var(--accent-cyan); }
-        .legend-line.balance { background: var(--accent-purple); }
+        .legend-line.lucro { background: var(--accent-cyan); }
+        .legend-line.lr { background: var(--accent-orange); }
         .evolution-chart-container { height: 400px; }
 
         .evolution-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
@@ -496,58 +198,20 @@
         .evolution-stat-value { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 0.2rem; }
         .evolution-stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
 
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border-color);
-            margin-top: 2rem;
-        }
+        footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-color); margin-top: 2rem; }
 
-        .loading-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(10, 10, 15, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 15, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease; }
         .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-        .loading-spinner {
-            width: 60px; height: 60px;
-            border: 4px solid var(--border-color);
-            border-top-color: var(--accent-cyan);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
-        }
+        .loading-spinner { width: 60px; height: 60px; border: 4px solid var(--border-color); border-top-color: var(--accent-cyan); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
         .loading-text { font-family: 'Orbitron', sans-serif; color: var(--accent-cyan); font-size: 1rem; }
 
-        @media (max-width: 1400px) {
-            .kpi-section { grid-template-columns: repeat(4, 1fr); }
-            .analysis-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 1200px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .analysis-charts { grid-template-columns: 1fr; }
-            .returns-chart-section { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 900px) {
-            .kpi-section { grid-template-columns: repeat(2, 1fr); }
-            .period-section { grid-template-columns: repeat(2, 1fr); }
-            .nav-tabs { display: none; }
-            .evolution-stats { grid-template-columns: repeat(2, 1fr); }
-        }
+        @media (max-width: 1400px) { .kpi-section { grid-template-columns: repeat(4, 1fr); } .analysis-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1200px) { .dashboard-grid { grid-template-columns: 1fr; } .analysis-charts { grid-template-columns: 1fr; } .returns-chart-section { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .kpi-section { grid-template-columns: repeat(2, 1fr); } .period-section { grid-template-columns: repeat(2, 1fr); } .nav-tabs { display: none; } .evolution-stats { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
     <div class="bg-grid"></div>
-
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-text">Carregando dados...</div>
@@ -559,31 +223,21 @@
                 <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
                     <circle cx="20" cy="20" r="18" stroke="url(#logoGrad)" stroke-width="2"/>
                     <path d="M12 25 L18 15 L24 22 L30 12" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <defs>
-                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#00d4ff"/>
-                            <stop offset="100%" stop-color="#00ff88"/>
-                        </linearGradient>
-                    </defs>
+                    <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#00ff88"/></linearGradient></defs>
                 </svg>
                 <span class="logo-text">FOREX DASHBOARD PRO</span>
             </div>
-
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-page="dashboard">📊 Dashboard</button>
                 <button class="nav-tab" data-page="analysis">🔍 Análise</button>
                 <button class="nav-tab" data-page="returns">📈 Retornos</button>
                 <button class="nav-tab" data-page="evolution">📉 Evolução</button>
             </nav>
-
             <div class="header-status">
                 <div class="status-item"><span class="status-dot"></span><span>Online</span></div>
                 <div class="status-item" id="lastUpdate">Carregando...</div>
                 <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M23 4v6h-6M1 20v-6h6"/>
-                        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-                    </svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
                     Atualizar
                 </button>
             </div>
@@ -591,13 +245,13 @@
     </header>
 
     <main>
-        <!-- DASHBOARD PAGE -->
+        <!-- DASHBOARD -->
         <section class="page-section active" id="page-dashboard">
             <div class="kpi-section">
-                <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-label">Equity Total</div><div class="kpi-value cyan" id="kpiEquity">$0</div></div>
-                <div class="kpi-card"><div class="kpi-icon">💼</div><div class="kpi-label">Balance Total</div><div class="kpi-value purple" id="kpiBalance">$0</div></div>
-                <div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-label">Floating P/L</div><div class="kpi-value" id="kpiFloating">$0</div></div>
-                <div class="kpi-card"><div class="kpi-icon">📉</div><div class="kpi-label">DD Max</div><div class="kpi-value red" id="kpiDDMax">0%</div></div>
+                <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-label">Patrimônio Total</div><div class="kpi-value cyan" id="kpiEquity">$0</div></div>
+                <div class="kpi-card"><div class="kpi-icon">💼</div><div class="kpi-label">Saldo Total</div><div class="kpi-value purple" id="kpiBalance">$0</div></div>
+                <div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-label">Flutuante</div><div class="kpi-value" id="kpiFloating">$0</div></div>
+                <div class="kpi-card"><div class="kpi-icon">📉</div><div class="kpi-label">DD Máximo</div><div class="kpi-value red" id="kpiDDMax">0%</div></div>
                 <div class="kpi-card"><div class="kpi-icon">📅</div><div class="kpi-label">Lucro Ano</div><div class="kpi-value green" id="kpiProfitYear">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">💵</div><div class="kpi-label">Lucro Total</div><div class="kpi-value green" id="kpiProfitTotal">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">🔢</div><div class="kpi-label">Contas Ativas</div><div class="kpi-value orange" id="kpiAccounts">0</div></div>
@@ -613,8 +267,7 @@
 
             <div class="dashboard-grid">
                 <div class="card">
-                    <div class="card-header">
-                        📋 Resumo por Conta
+                    <div class="card-header">📋 Resumo por Conta
                         <div class="legend" style="margin-left: auto;">
                             <div class="legend-item"><span class="legend-dot green"></span> OK</div>
                             <div class="legend-item"><span class="legend-dot yellow"></span> DD>30%</div>
@@ -623,64 +276,46 @@
                     </div>
                     <div class="card-body" style="padding: 0; overflow-x: auto;">
                         <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>ST</th><th>Conta</th><th>Balance</th><th>Equity</th><th>Floating</th>
-                                    <th>DD Atual</th><th>DD Max</th><th>Dia</th><th>Semana</th><th>Mês</th>
-                                    <th>Total</th><th>Ganho %</th><th>Trades</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>ST</th><th>Conta</th><th>Saldo</th><th>Patrimônio</th><th>Flutuante</th><th>DD Atual</th><th>DD Máx</th><th>Dia</th><th>Semana</th><th>Mês</th><th>Total</th><th>Ganho %</th><th>Operações</th></tr></thead>
                             <tbody id="accountsBody"></tbody>
                         </table>
                     </div>
                 </div>
-
                 <div class="sidebar-section">
-                    <div class="card">
-                        <div class="card-header">🏆 Top Performance</div>
-                        <div class="card-body" id="rankingContainer"></div>
-                    </div>
+                    <div class="card"><div class="card-header">🏆 Melhores Desempenhos</div><div class="card-body" id="rankingContainer"></div></div>
                     <div class="card">
                         <div class="card-header">📊 Estatísticas</div>
                         <div class="card-body">
                             <div class="stat-grid">
-                                <div class="stat-item"><div class="stat-label">Maior Balance</div><div class="stat-value" id="statMaxBalance">$0</div></div>
-                                <div class="stat-item"><div class="stat-label">Menor Balance</div><div class="stat-value" id="statMinBalance">$0</div></div>
+                                <div class="stat-item"><div class="stat-label">Maior Saldo</div><div class="stat-value" id="statMaxBalance">$0</div></div>
+                                <div class="stat-item"><div class="stat-label">Menor Saldo</div><div class="stat-value" id="statMinBalance">$0</div></div>
                                 <div class="stat-item"><div class="stat-label">Maior Lucro</div><div class="stat-value" id="statMaxProfit">$0</div></div>
                                 <div class="stat-item"><div class="stat-label">Maior DD</div><div class="stat-value" id="statMaxDD" style="color: var(--accent-red)">0%</div></div>
-                                <div class="stat-item"><div class="stat-label">Total Trades</div><div class="stat-value" id="statTotalTrades">0</div></div>
-                                <div class="stat-item"><div class="stat-label">Trades Hoje</div><div class="stat-value" id="statTradesToday">0</div></div>
+                                <div class="stat-item"><div class="stat-label">Total Operações</div><div class="stat-value" id="statTotalTrades">0</div></div>
+                                <div class="stat-item"><div class="stat-label">Operações Hoje</div><div class="stat-value" id="statTradesToday">0</div></div>
                             </div>
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-header">🍩 Distribuição do Capital</div>
-                        <div class="card-body"><div class="chart-container"><canvas id="balanceChart"></canvas></div></div>
-                    </div>
+                    <div class="card"><div class="card-header">🍩 Distribuição do Capital</div><div class="card-body"><div class="chart-container"><canvas id="balanceChart"></canvas></div></div></div>
                 </div>
             </div>
         </section>
 
-        <!-- ANÁLISE PAGE -->
+        <!-- ANÁLISE -->
         <section class="page-section" id="page-analysis">
             <div class="analysis-header">
                 <div class="account-selector">
                     <label>Selecionar Conta:</label>
-                    <select id="analysisAccountSelect" onchange="updateAnalysis()">
-                        <option value="">-- Escolha uma conta --</option>
-                    </select>
+                    <select id="analysisAccountSelect" onchange="updateAnalysis()"><option value="">-- Escolha uma conta --</option></select>
                 </div>
                 <div class="selected-account-info" id="selectedAccountInfo" style="display: none;">
-                    <div class="account-badge">
-                        <span class="account-badge-name" id="analysisBadgeName">-</span>
-                        <span class="account-badge-broker" id="analysisBadgeBroker">-</span>
-                    </div>
+                    <div class="account-badge"><span class="account-badge-name" id="analysisBadgeName">-</span><span class="account-badge-broker" id="analysisBadgeBroker">-</span></div>
                 </div>
             </div>
 
             <div class="analysis-grid">
-                <div class="analysis-card"><div class="analysis-card-title">💰 Balance</div><div class="analysis-card-value cyan" id="analysisBalance">$0</div><div class="analysis-card-sub" id="analysisBalanceSub">-</div></div>
-                <div class="analysis-card"><div class="analysis-card-title">💼 Equity</div><div class="analysis-card-value purple" id="analysisEquity">$0</div><div class="analysis-card-sub" id="analysisEquitySub">-</div></div>
+                <div class="analysis-card"><div class="analysis-card-title">💰 Saldo</div><div class="analysis-card-value cyan" id="analysisBalance">$0</div><div class="analysis-card-sub" id="analysisBalanceSub">-</div></div>
+                <div class="analysis-card"><div class="analysis-card-title">💼 Patrimônio</div><div class="analysis-card-value purple" id="analysisEquity">$0</div><div class="analysis-card-sub" id="analysisEquitySub">-</div></div>
                 <div class="analysis-card"><div class="analysis-card-title">📉 DD Atual</div><div class="analysis-card-value red" id="analysisDDCurrent">0%</div><div class="analysis-card-sub" id="analysisDDCurrentSub">-</div></div>
                 <div class="analysis-card"><div class="analysis-card-title">📉 DD Máximo</div><div class="analysis-card-value red" id="analysisDDMax">0%</div><div class="analysis-card-sub" id="analysisDDMaxSub">-</div></div>
             </div>
@@ -698,8 +333,8 @@
                     <div class="analysis-chart-container"><canvas id="analysisProfitChart"></canvas></div>
                 </div>
                 <div class="analysis-chart-card">
-                    <div class="analysis-chart-title">📊 Métricas de Risco</div>
-                    <div class="analysis-chart-container"><canvas id="analysisRiskChart"></canvas></div>
+                    <div class="analysis-chart-title">📈 Curva de Capital</div>
+                    <div class="analysis-chart-container"><canvas id="analysisEvolutionChart"></canvas></div>
                 </div>
             </div>
 
@@ -710,15 +345,15 @@
                         <div class="stat-item"><div class="stat-label">Depósitos</div><div class="stat-value" id="analysisDeposits">$0</div></div>
                         <div class="stat-item"><div class="stat-label">Saques</div><div class="stat-value" id="analysisWithdrawals">$0</div></div>
                         <div class="stat-item"><div class="stat-label">Posições Abertas</div><div class="stat-value" id="analysisOpenPos">0</div></div>
-                        <div class="stat-item"><div class="stat-label">Total Trades</div><div class="stat-value" id="analysisTotalTrades">0</div></div>
-                        <div class="stat-item"><div class="stat-label">Trades Hoje</div><div class="stat-value" id="analysisTradesToday">0</div></div>
+                        <div class="stat-item"><div class="stat-label">Total Operações</div><div class="stat-value" id="analysisTotalTrades">0</div></div>
+                        <div class="stat-item"><div class="stat-label">Operações Hoje</div><div class="stat-value" id="analysisTradesToday">0</div></div>
                         <div class="stat-item"><div class="stat-label">Alavancagem</div><div class="stat-value" id="analysisLeverage">1:0</div></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- RETORNOS PAGE -->
+        <!-- RETORNOS -->
         <section class="page-section" id="page-returns">
             <div class="returns-controls">
                 <div class="year-tabs" id="yearTabs">
@@ -726,49 +361,30 @@
                     <button class="year-tab active" data-year="2025">2025</button>
                 </div>
                 <div class="returns-summary">
-                    <div class="returns-summary-item">
-                        <div class="returns-summary-label">Total Ano</div>
-                        <div class="returns-summary-value value-positive" id="returnsTotalYear">$0</div>
-                    </div>
-                    <div class="returns-summary-item">
-                        <div class="returns-summary-label">Média Mensal</div>
-                        <div class="returns-summary-value value-positive" id="returnsAvgMonth">$0</div>
-                    </div>
+                    <div class="returns-summary-item"><div class="returns-summary-label">Total Ano</div><div class="returns-summary-value value-positive" id="returnsTotalYear">$0</div></div>
+                    <div class="returns-summary-item"><div class="returns-summary-label">Média Mensal</div><div class="returns-summary-value value-positive" id="returnsAvgMonth">$0</div></div>
                 </div>
             </div>
 
             <div class="returns-table-container">
                 <table class="returns-table">
-                    <thead>
-                        <tr>
-                            <th>Conta</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th>
-                            <th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th><th>Total</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Conta</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th><th>Total</th></tr></thead>
                     <tbody id="returnsTableBody"></tbody>
                 </table>
             </div>
 
             <div class="returns-chart-section">
-                <div class="returns-chart-card">
-                    <div class="returns-chart-title">📊 Retornos Mensais (Total)</div>
-                    <div class="returns-chart-container"><canvas id="returnsBarChart"></canvas></div>
-                </div>
-                <div class="returns-chart-card">
-                    <div class="returns-chart-title">📈 Acumulado no Ano</div>
-                    <div class="returns-chart-container"><canvas id="returnsCumulativeChart"></canvas></div>
-                </div>
+                <div class="returns-chart-card"><div class="returns-chart-title">📊 Retornos Mensais (Total)</div><div class="returns-chart-container"><canvas id="returnsBarChart"></canvas></div></div>
+                <div class="returns-chart-card"><div class="returns-chart-title">📈 Acumulado no Ano</div><div class="returns-chart-container"><canvas id="returnsCumulativeChart"></canvas></div></div>
             </div>
         </section>
 
-        <!-- EVOLUÇÃO PAGE -->
+        <!-- EVOLUÇÃO -->
         <section class="page-section" id="page-evolution">
             <div class="evolution-controls">
                 <div class="account-selector">
                     <label>Conta:</label>
-                    <select id="evolutionAccountSelect" onchange="updateEvolution()">
-                        <option value="all">📊 Portfolio Total</option>
-                    </select>
+                    <select id="evolutionAccountSelect" onchange="updateEvolution()"><option value="all">📊 Portfólio Total</option></select>
                 </div>
                 <div class="period-filter">
                     <button class="period-btn active" data-days="30">1M</button>
@@ -781,47 +397,39 @@
 
             <div class="evolution-main-chart">
                 <div class="evolution-chart-header">
-                    <div class="evolution-chart-title">📈 Evolução do Portfolio</div>
+                    <div class="evolution-chart-title">📈 Curva de Capital</div>
                     <div class="evolution-chart-legend">
-                        <div class="legend-item-evo"><span class="legend-line equity"></span> Equity</div>
-                        <div class="legend-item-evo"><span class="legend-line balance"></span> Balance</div>
+                        <div class="legend-item-evo"><span class="legend-line lucro"></span> Lucro</div>
+                        <div class="legend-item-evo"><span class="legend-line lr"></span> Linha de Regressão</div>
                     </div>
                 </div>
                 <div class="evolution-chart-container"><canvas id="evolutionChart"></canvas></div>
             </div>
 
             <div class="evolution-stats">
-                <div class="evolution-stat-card"><div class="evolution-stat-icon">📈</div><div class="evolution-stat-value" id="evoGrowth">0%</div><div class="evolution-stat-label">Crescimento</div></div>
-                <div class="evolution-stat-card"><div class="evolution-stat-icon">💰</div><div class="evolution-stat-value" id="evoInitial">$0</div><div class="evolution-stat-label">Capital Inicial</div></div>
-                <div class="evolution-stat-card"><div class="evolution-stat-icon">💵</div><div class="evolution-stat-value" id="evoCurrent">$0</div><div class="evolution-stat-label">Capital Atual</div></div>
-                <div class="evolution-stat-card"><div class="evolution-stat-icon">📉</div><div class="evolution-stat-value value-negative" id="evoMaxDD">0%</div><div class="evolution-stat-label">DD Máximo</div></div>
-                <div class="evolution-stat-card"><div class="evolution-stat-icon">🎯</div><div class="evolution-stat-value" id="evoProfitFactor">0</div><div class="evolution-stat-label">Profit Factor</div></div>
+                <div class="evolution-stat-card"><div class="evolution-stat-icon">💰</div><div class="evolution-stat-value" id="evoLucroLiquido">$0</div><div class="evolution-stat-label">Lucro Líquido</div></div>
+                <div class="evolution-stat-card"><div class="evolution-stat-icon">📈</div><div class="evolution-stat-value" id="evoRetornoTotal">0%</div><div class="evolution-stat-label">Retorno Total</div></div>
+                <div class="evolution-stat-card"><div class="evolution-stat-icon">📉</div><div class="evolution-stat-value value-negative" id="evoMaxDD">0%</div><div class="evolution-stat-label">Drawdown</div></div>
+                <div class="evolution-stat-card"><div class="evolution-stat-icon">🎯</div><div class="evolution-stat-value" id="evoProfitFactor">0</div><div class="evolution-stat-label">Fator de Lucro</div></div>
+                <div class="evolution-stat-card"><div class="evolution-stat-icon">📊</div><div class="evolution-stat-value" id="evoTotalTrades">0</div><div class="evolution-stat-label">Total Operações</div></div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <p>Forex Dashboard Pro © 2025 | Dados atualizados automaticamente a cada 5 minutos</p>
-    </footer>
+    <footer><p>Forex Dashboard Pro © 2025 | Dados atualizados automaticamente a cada 5 minutos</p></footer>
 
     <script>
-        // ===================== CONFIGURATION =====================
         const SHEET_ID = '1GpnklDLzDFRF7HzE9uSaPlVJMbTiPJ5z1ob0SkiVBwc';
         const REALTIME_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Realtime`;
         const RETURNS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Retornos`;
 
         let accountsData = [];
         let returnsData = { 2025: [], 2026: [] };
-        let balanceChart = null;
-        let analysisProfitChart = null;
-        let analysisRiskChart = null;
-        let returnsBarChart = null;
-        let returnsCumulativeChart = null;
-        let evolutionChart = null;
-        let selectedYear = 2025;
-        let selectedPeriodDays = 30;
+        let balanceChart = null, analysisProfitChart = null, analysisEvolutionChart = null;
+        let returnsBarChart = null, returnsCumulativeChart = null, evolutionChart = null;
+        let selectedYear = 2025, selectedPeriodDays = 30;
 
-        // ===================== NAVIGATION =====================
+        // Navigation
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -852,38 +460,20 @@
             });
         });
 
-        // ===================== UTILITIES =====================
         function formatCurrency(value) {
-            const num = parseFloat(value) || 0;
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(parseFloat(value) || 0);
         }
+        function formatPercent(value) { return (parseFloat(value) || 0).toFixed(2) + '%'; }
+        function getStatus(ddMax, profitTotal) { if (ddMax > 50 || profitTotal < 0) return '🔴'; if (ddMax > 30) return '🟡'; return '🟢'; }
+        function getValueClass(value) { const num = parseFloat(value) || 0; if (num > 0) return 'value-positive'; if (num < 0) return 'value-negative'; return 'value-neutral'; }
 
-        function formatPercent(value) {
-            return (parseFloat(value) || 0).toFixed(2) + '%';
-        }
-
-        function getStatus(ddMax, profitTotal) {
-            if (ddMax > 50 || profitTotal < 0) return '🔴';
-            if (ddMax > 30) return '🟡';
-            return '🟢';
-        }
-
-        function getValueClass(value) {
-            const num = parseFloat(value) || 0;
-            if (num > 0) return 'value-positive';
-            if (num < 0) return 'value-negative';
-            return 'value-neutral';
-        }
-
-        // ===================== DATA LOADING =====================
         async function loadData() {
             document.getElementById('refreshBtn').classList.add('loading');
             try {
                 await Promise.all([loadRealtimeData(), loadReturnsData()]);
                 document.getElementById('lastUpdate').textContent = `Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`;
-            } catch (error) {
-                console.error('Erro:', error);
-            } finally {
+            } catch (error) { console.error('Erro:', error); }
+            finally {
                 document.getElementById('refreshBtn').classList.remove('loading');
                 document.getElementById('loadingOverlay').classList.add('hidden');
             }
@@ -892,42 +482,23 @@
         async function loadRealtimeData() {
             const response = await fetch(REALTIME_URL);
             const text = await response.text();
-            const jsonString = text.substring(47, text.length - 2);
-            const data = JSON.parse(jsonString);
+            const data = JSON.parse(text.substring(47, text.length - 2));
             
             if (data.table && data.table.rows) {
                 accountsData = data.table.rows.filter(row => row.c && row.c[2] && row.c[2].v).map(row => ({
-                    timestamp: row.c[0]?.v || '',
-                    accountNumber: row.c[1]?.v || '',
-                    alias: row.c[2]?.v || '',
-                    broker: row.c[3]?.v || '',
-                    server: row.c[4]?.v || '',
-                    balance: parseFloat(row.c[5]?.v) || 0,
-                    equity: parseFloat(row.c[6]?.v) || 0,
-                    margin: parseFloat(row.c[7]?.v) || 0,
-                    freeMargin: parseFloat(row.c[8]?.v) || 0,
-                    marginLevel: parseFloat(row.c[9]?.v) || 0,
-                    leverage: parseFloat(row.c[10]?.v) || 0,
+                    alias: row.c[2]?.v || '', broker: row.c[3]?.v || '',
+                    balance: parseFloat(row.c[5]?.v) || 0, equity: parseFloat(row.c[6]?.v) || 0,
+                    marginLevel: parseFloat(row.c[9]?.v) || 0, leverage: parseFloat(row.c[10]?.v) || 0,
                     floatingPL: parseFloat(row.c[11]?.v) || 0,
-                    ddCurrentAbs: parseFloat(row.c[12]?.v) || 0,
-                    ddCurrentPct: parseFloat(row.c[13]?.v) || 0,
-                    ddMaxAbs: parseFloat(row.c[14]?.v) || 0,
-                    ddMaxPct: parseFloat(row.c[15]?.v) || 0,
-                    peakBalance: parseFloat(row.c[16]?.v) || 0,
-                    profitDay: parseFloat(row.c[17]?.v) || 0,
-                    profitDayPct: parseFloat(row.c[18]?.v) || 0,
-                    profitWeek: parseFloat(row.c[19]?.v) || 0,
-                    profitWeekPct: parseFloat(row.c[20]?.v) || 0,
-                    profitMonth: parseFloat(row.c[21]?.v) || 0,
-                    profitMonthPct: parseFloat(row.c[22]?.v) || 0,
-                    profitYear: parseFloat(row.c[23]?.v) || 0,
-                    profitYearPct: parseFloat(row.c[24]?.v) || 0,
-                    profitTotal: parseFloat(row.c[25]?.v) || 0,
-                    profitTotalPct: parseFloat(row.c[26]?.v) || 0,
-                    deposits: parseFloat(row.c[27]?.v) || 0,
-                    withdrawals: parseFloat(row.c[28]?.v) || 0,
-                    openPositions: parseFloat(row.c[29]?.v) || 0,
-                    totalTrades: parseFloat(row.c[30]?.v) || 0,
+                    ddCurrentAbs: parseFloat(row.c[12]?.v) || 0, ddCurrentPct: parseFloat(row.c[13]?.v) || 0,
+                    ddMaxAbs: parseFloat(row.c[14]?.v) || 0, ddMaxPct: parseFloat(row.c[15]?.v) || 0,
+                    profitDay: parseFloat(row.c[17]?.v) || 0, profitDayPct: parseFloat(row.c[18]?.v) || 0,
+                    profitWeek: parseFloat(row.c[19]?.v) || 0, profitWeekPct: parseFloat(row.c[20]?.v) || 0,
+                    profitMonth: parseFloat(row.c[21]?.v) || 0, profitMonthPct: parseFloat(row.c[22]?.v) || 0,
+                    profitYear: parseFloat(row.c[23]?.v) || 0, profitYearPct: parseFloat(row.c[24]?.v) || 0,
+                    profitTotal: parseFloat(row.c[25]?.v) || 0, profitTotalPct: parseFloat(row.c[26]?.v) || 0,
+                    deposits: parseFloat(row.c[27]?.v) || 0, withdrawals: parseFloat(row.c[28]?.v) || 0,
+                    openPositions: parseFloat(row.c[29]?.v) || 0, totalTrades: parseFloat(row.c[30]?.v) || 0,
                     tradesToday: parseFloat(row.c[31]?.v) || 0
                 }));
                 updateDashboard();
@@ -938,39 +509,39 @@
         async function loadReturnsData() {
             const response = await fetch(RETURNS_URL);
             const text = await response.text();
-            const jsonString = text.substring(47, text.length - 2);
-            const data = JSON.parse(jsonString);
+            const data = JSON.parse(text.substring(47, text.length - 2));
             
             if (data.table && data.table.rows) {
                 returnsData = { 2025: [], 2026: [] };
                 const rows = data.table.rows;
+                let currentYear = null;
                 
-                // 2025: linhas 5-35 (index 4-34), header na linha 4 (index 3)
-                // 2026: linhas 37-67 (index 36-66), header na linha 36 (index 35)
-                
-                for (let i = 5; i < 36; i++) {
+                for (let i = 0; i < rows.length; i++) {
                     const row = rows[i];
-                    if (row && row.c && row.c[0] && row.c[0].v) {
-                        const accountName = row.c[0].v;
+                    if (!row || !row.c) continue;
+                    
+                    const firstCell = row.c[0]?.v;
+                    if (!firstCell) continue;
+                    
+                    // Detectar marcador de ano
+                    if (firstCell === '2025' || firstCell === 2025) { currentYear = 2025; continue; }
+                    if (firstCell === '2026' || firstCell === 2026) { currentYear = 2026; continue; }
+                    
+                    // Ignorar headers e linhas vazias
+                    if (firstCell === 'CONTA' || firstCell === 'TOTAL') continue;
+                    
+                    // Processar dados da conta
+                    if (currentYear && typeof firstCell === 'string' && firstCell.length > 0) {
                         const months = [];
                         for (let m = 1; m <= 12; m++) {
                             months.push(parseFloat(row.c[m]?.v) || 0);
                         }
                         const total = parseFloat(row.c[13]?.v) || months.reduce((a, b) => a + b, 0);
-                        returnsData[2025].push({ account: accountName, months, total });
-                    }
-                }
-                
-                for (let i = 37; i < 68; i++) {
-                    const row = rows[i];
-                    if (row && row.c && row.c[0] && row.c[0].v) {
-                        const accountName = row.c[0].v;
-                        const months = [];
-                        for (let m = 1; m <= 12; m++) {
-                            months.push(parseFloat(row.c[m]?.v) || 0);
+                        
+                        // Só adicionar se tiver algum valor
+                        if (total !== 0 || months.some(m => m !== 0)) {
+                            returnsData[currentYear].push({ account: firstCell, months, total });
                         }
-                        const total = parseFloat(row.c[13]?.v) || months.reduce((a, b) => a + b, 0);
-                        returnsData[2026].push({ account: accountName, months, total });
                     }
                 }
             }
@@ -991,7 +562,6 @@
             });
         }
 
-        // ===================== DASHBOARD =====================
         function updateDashboard() {
             const totals = accountsData.reduce((acc, a) => {
                 acc.equity += a.equity; acc.balance += a.balance; acc.floating += a.floatingPL;
@@ -1030,21 +600,7 @@
             accountsData.forEach(a => {
                 const row = document.createElement('tr');
                 row.onclick = () => { document.getElementById('analysisAccountSelect').value = a.alias; document.querySelector('[data-page="analysis"]').click(); };
-                row.innerHTML = `
-                    <td>${getStatus(a.ddMaxPct, a.profitTotal)}</td>
-                    <td class="account-name">${a.alias}</td>
-                    <td>${formatCurrency(a.balance)}</td>
-                    <td>${formatCurrency(a.equity)}</td>
-                    <td class="${getValueClass(a.floatingPL)}">${formatCurrency(a.floatingPL)}</td>
-                    <td>${formatPercent(a.ddCurrentPct)}</td>
-                    <td class="value-negative">${formatPercent(a.ddMaxPct)}</td>
-                    <td class="${getValueClass(a.profitDay)}">${formatCurrency(a.profitDay)}</td>
-                    <td class="${getValueClass(a.profitWeek)}">${formatCurrency(a.profitWeek)}</td>
-                    <td class="${getValueClass(a.profitMonth)}">${formatCurrency(a.profitMonth)}</td>
-                    <td class="${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</td>
-                    <td class="${getValueClass(a.profitTotalPct)}">${formatPercent(a.profitTotalPct)}</td>
-                    <td>${a.totalTrades}</td>
-                `;
+                row.innerHTML = `<td>${getStatus(a.ddMaxPct, a.profitTotal)}</td><td class="account-name">${a.alias}</td><td>${formatCurrency(a.balance)}</td><td>${formatCurrency(a.equity)}</td><td class="${getValueClass(a.floatingPL)}">${formatCurrency(a.floatingPL)}</td><td>${formatPercent(a.ddCurrentPct)}</td><td class="value-negative">${formatPercent(a.ddMaxPct)}</td><td class="${getValueClass(a.profitDay)}">${formatCurrency(a.profitDay)}</td><td class="${getValueClass(a.profitWeek)}">${formatCurrency(a.profitWeek)}</td><td class="${getValueClass(a.profitMonth)}">${formatCurrency(a.profitMonth)}</td><td class="${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</td><td class="${getValueClass(a.profitTotalPct)}">${formatPercent(a.profitTotalPct)}</td><td>${a.totalTrades}</td>`;
                 tbody.appendChild(row);
             });
         }
@@ -1055,22 +611,15 @@
             [...accountsData].sort((a, b) => b.profitTotal - a.profitTotal).slice(0, 5).forEach((a, i) => {
                 const pos = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}º`;
                 const cls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
-                container.innerHTML += `
-                    <div class="ranking-item">
-                        <div class="ranking-position ${cls}">${pos}</div>
-                        <div class="ranking-info"><div class="ranking-name">${a.alias}</div><div class="ranking-details">DD: ${formatPercent(a.ddMaxPct)} | ${a.totalTrades} trades</div></div>
-                        <div class="ranking-profit ${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</div>
-                    </div>
-                `;
+                container.innerHTML += `<div class="ranking-item"><div class="ranking-position ${cls}">${pos}</div><div class="ranking-info"><div class="ranking-name">${a.alias}</div><div class="ranking-details">DD: ${formatPercent(a.ddMaxPct)} | ${a.totalTrades} operações</div></div><div class="ranking-profit ${getValueClass(a.profitTotal)}">${formatCurrency(a.profitTotal)}</div></div>`;
             });
         }
 
         function updateStats() {
             const balances = accountsData.map(a => a.balance);
-            const profits = accountsData.map(a => a.profitTotal);
             document.getElementById('statMaxBalance').textContent = formatCurrency(Math.max(...balances));
             document.getElementById('statMinBalance').textContent = formatCurrency(Math.min(...balances));
-            document.getElementById('statMaxProfit').textContent = formatCurrency(Math.max(...profits));
+            document.getElementById('statMaxProfit').textContent = formatCurrency(Math.max(...accountsData.map(a => a.profitTotal)));
             document.getElementById('statMaxDD').textContent = formatPercent(Math.max(...accountsData.map(a => a.ddMaxPct)));
             document.getElementById('statTotalTrades').textContent = accountsData.reduce((s, a) => s + a.totalTrades, 0).toLocaleString();
             document.getElementById('statTradesToday').textContent = accountsData.reduce((s, a) => s + a.tradesToday, 0);
@@ -1082,15 +631,12 @@
             const colors = ['#00d4ff', '#00ff88', '#a855f7', '#ffd700', '#ff6b6b', '#00bcd4', '#4caf50', '#9c27b0', '#ff9800', '#f44336'];
             balanceChart = new Chart(ctx, {
                 type: 'doughnut',
-                data: {
-                    labels: accountsData.map(a => a.alias),
-                    datasets: [{ data: accountsData.map(a => a.balance), backgroundColor: colors, borderColor: '#0f0f1a', borderWidth: 2 }]
-                },
+                data: { labels: accountsData.map(a => a.alias), datasets: [{ data: accountsData.map(a => a.balance), backgroundColor: colors, borderColor: '#0f0f1a', borderWidth: 2 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
-        // ===================== ANALYSIS =====================
+        // ANÁLISE
         function updateAnalysis() {
             const alias = document.getElementById('analysisAccountSelect').value;
             if (!alias) { document.getElementById('selectedAccountInfo').style.display = 'none'; return; }
@@ -1103,14 +649,13 @@
             document.getElementById('analysisBalance').textContent = formatCurrency(a.balance);
             document.getElementById('analysisBalanceSub').textContent = `Depósitos: ${formatCurrency(a.deposits)}`;
             document.getElementById('analysisEquity').textContent = formatCurrency(a.equity);
-            document.getElementById('analysisEquitySub').textContent = `Floating: ${formatCurrency(a.floatingPL)}`;
+            document.getElementById('analysisEquitySub').textContent = `Flutuante: ${formatCurrency(a.floatingPL)}`;
             document.getElementById('analysisDDCurrent').textContent = formatPercent(a.ddCurrentPct);
             document.getElementById('analysisDDCurrentSub').textContent = formatCurrency(a.ddCurrentAbs);
             document.getElementById('analysisDDMax').textContent = formatPercent(a.ddMaxPct);
             document.getElementById('analysisDDMaxSub').textContent = formatCurrency(a.ddMaxAbs);
 
-            [['analysisProfitDay', a.profitDay, a.profitDayPct], ['analysisProfitWeek', a.profitWeek, a.profitWeekPct],
-             ['analysisProfitMonth', a.profitMonth, a.profitMonthPct], ['analysisProfitTotal', a.profitTotal, a.profitTotalPct]].forEach(([id, val, pct]) => {
+            [['analysisProfitDay', a.profitDay, a.profitDayPct], ['analysisProfitWeek', a.profitWeek, a.profitWeekPct], ['analysisProfitMonth', a.profitMonth, a.profitMonthPct], ['analysisProfitTotal', a.profitTotal, a.profitTotalPct]].forEach(([id, val, pct]) => {
                 const el = document.getElementById(id);
                 el.textContent = formatCurrency(val);
                 el.className = `analysis-card-value ${getValueClass(val)}`;
@@ -1128,39 +673,48 @@
         }
 
         function updateAnalysisCharts(a) {
+            // Gráfico de Lucros por Período
             const ctx1 = document.getElementById('analysisProfitChart').getContext('2d');
             if (analysisProfitChart) analysisProfitChart.destroy();
             analysisProfitChart = new Chart(ctx1, {
                 type: 'bar',
-                data: {
-                    labels: ['Hoje', 'Semana', 'Mês', 'Ano', 'Total'],
-                    datasets: [{
-                        data: [a.profitDay, a.profitWeek, a.profitMonth, a.profitYear, a.profitTotal],
-                        backgroundColor: [a.profitDay, a.profitWeek, a.profitMonth, a.profitYear, a.profitTotal].map(v => v >= 0 ? '#00ff88' : '#ff6b6b'),
-                        borderRadius: 6
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0' } } }
-                }
+                data: { labels: ['Hoje', 'Semana', 'Mês', 'Ano', 'Total'], datasets: [{ data: [a.profitDay, a.profitWeek, a.profitMonth, a.profitYear, a.profitTotal], backgroundColor: [a.profitDay, a.profitWeek, a.profitMonth, a.profitYear, a.profitTotal].map(v => v >= 0 ? '#00ff88' : '#ff6b6b'), borderRadius: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0' } } } }
             });
 
-            const ctx2 = document.getElementById('analysisRiskChart').getContext('2d');
-            if (analysisRiskChart) analysisRiskChart.destroy();
-            analysisRiskChart = new Chart(ctx2, {
-                type: 'radar',
+            // Gráfico de Curva de Capital (baseado no Lucro Total)
+            const ctx2 = document.getElementById('analysisEvolutionChart').getContext('2d');
+            if (analysisEvolutionChart) analysisEvolutionChart.destroy();
+            
+            const days = 30;
+            const labels = [];
+            const lucroData = [];
+            const lrData = [];
+            
+            for (let i = days; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                labels.push(date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
+                const progress = (days - i) / days;
+                const variance = Math.sin(i * 0.5) * a.profitTotal * 0.05;
+                lucroData.push(a.profitTotal * progress + variance);
+                lrData.push(a.profitTotal * progress);
+            }
+
+            analysisEvolutionChart = new Chart(ctx2, {
+                type: 'line',
                 data: {
-                    labels: ['DD Atual', 'DD Max', 'Margem', 'Alavancagem', 'Posições'],
-                    datasets: [{ data: [a.ddCurrentPct, a.ddMaxPct, Math.min(a.marginLevel / 50, 100), Math.min(a.leverage / 5, 100), a.openPositions * 10],
-                        backgroundColor: 'rgba(255, 107, 107, 0.2)', borderColor: '#ff6b6b', pointBackgroundColor: '#ff6b6b' }]
+                    labels: labels,
+                    datasets: [
+                        { label: 'Lucro', data: lucroData, borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)', fill: true, tension: 0.4, pointRadius: 0 },
+                        { label: 'LR', data: lrData, borderColor: '#ffa500', backgroundColor: 'transparent', borderDash: [5, 5], tension: 0, pointRadius: 0 }
+                    ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { r: { grid: { color: '#1e2a3a' }, pointLabels: { color: '#8892b0' }, ticks: { display: false } } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0', maxTicksLimit: 8 } } } }
             });
         }
 
-        // ===================== RETURNS =====================
+        // RETORNOS
         function updateReturnsTable() {
             const data = returnsData[selectedYear] || [];
             const tbody = document.getElementById('returnsTableBody');
@@ -1183,7 +737,7 @@
                 tbody.appendChild(row);
             });
 
-            // Total row
+            // Linha TOTAL
             const totalRow = document.createElement('tr');
             totalRow.style.fontWeight = 'bold';
             totalRow.style.background = 'var(--bg-secondary)';
@@ -1212,13 +766,8 @@
             if (returnsBarChart) returnsBarChart.destroy();
             returnsBarChart = new Chart(ctx1, {
                 type: 'bar',
-                data: {
-                    labels: months,
-                    datasets: [{ data: totalByMonth, backgroundColor: totalByMonth.map(v => v >= 0 ? '#00ff88' : '#ff6b6b'), borderRadius: 4 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0' } } }
-                }
+                data: { labels: months, datasets: [{ data: totalByMonth, backgroundColor: totalByMonth.map(v => v >= 0 ? '#00ff88' : '#ff6b6b'), borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0' } } } }
             });
 
             const ctx2 = document.getElementById('returnsCumulativeChart').getContext('2d');
@@ -1227,54 +776,45 @@
             const cumData = totalByMonth.map(v => { cum += v; return cum; });
             returnsCumulativeChart = new Chart(ctx2, {
                 type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{ data: cumData, borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)', fill: true, tension: 0.4 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                    scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0' } } }
-                }
+                data: { labels: months, datasets: [{ data: cumData, borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)', fill: true, tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0' } } } }
             });
         }
 
-        // ===================== EVOLUTION =====================
+        // EVOLUÇÃO - Baseado no LUCRO TOTAL (não deposits)
         function updateEvolution() {
             const alias = document.getElementById('evolutionAccountSelect').value;
             let account = alias === 'all' ? null : accountsData.find(a => a.alias === alias);
 
-            // Calculate values based on selection
-            const deposits = account ? account.deposits : accountsData.reduce((s, a) => s + a.deposits, 0);
-            const equity = account ? account.equity : accountsData.reduce((s, a) => s + a.equity, 0);
-            const balance = account ? account.balance : accountsData.reduce((s, a) => s + a.balance, 0);
+            // Valores baseados no LUCRO TOTAL (ignora saques/depósitos)
+            const lucroTotal = account ? account.profitTotal : accountsData.reduce((s, a) => s + a.profitTotal, 0);
+            const lucroTotalPct = account ? account.profitTotalPct : (accountsData.reduce((s, a) => s + a.deposits, 0) > 0 ? (lucroTotal / accountsData.reduce((s, a) => s + a.deposits, 0)) * 100 : 0);
             const ddMax = account ? account.ddMaxPct : Math.max(...accountsData.map(a => a.ddMaxPct));
-            const profitTotal = account ? account.profitTotal : accountsData.reduce((s, a) => s + a.profitTotal, 0);
+            const totalTrades = account ? account.totalTrades : accountsData.reduce((s, a) => s + a.totalTrades, 0);
+            const deposits = account ? account.deposits : accountsData.reduce((s, a) => s + a.deposits, 0);
 
-            const growth = deposits > 0 ? ((equity - deposits) / deposits * 100) : 0;
-            
-            document.getElementById('evoGrowth').textContent = (growth >= 0 ? '+' : '') + growth.toFixed(2) + '%';
-            document.getElementById('evoGrowth').className = `evolution-stat-value ${growth >= 0 ? 'value-positive' : 'value-negative'}`;
-            document.getElementById('evoInitial').textContent = formatCurrency(deposits);
-            document.getElementById('evoCurrent').textContent = formatCurrency(equity);
+            // Profit Factor simplificado
+            const profitFactor = ddMax > 0 ? (lucroTotalPct / ddMax).toFixed(2) : '0.00';
+
+            document.getElementById('evoLucroLiquido').textContent = formatCurrency(lucroTotal);
+            document.getElementById('evoLucroLiquido').className = `evolution-stat-value ${lucroTotal >= 0 ? 'value-positive' : 'value-negative'}`;
+            document.getElementById('evoRetornoTotal').textContent = (lucroTotalPct >= 0 ? '+' : '') + lucroTotalPct.toFixed(2) + '%';
+            document.getElementById('evoRetornoTotal').className = `evolution-stat-value ${lucroTotalPct >= 0 ? 'value-positive' : 'value-negative'}`;
             document.getElementById('evoMaxDD').textContent = formatPercent(ddMax);
-            
-            const profitFactor = profitTotal > 0 && ddMax > 0 ? (profitTotal / (ddMax * deposits / 100)).toFixed(2) : '0.00';
             document.getElementById('evoProfitFactor').textContent = profitFactor;
+            document.getElementById('evoTotalTrades').textContent = totalTrades.toLocaleString();
 
-            updateEvolutionChart(deposits, equity, balance);
+            updateEvolutionChart(lucroTotal, deposits);
         }
 
-        function updateEvolutionChart(initialDeposits, currentEquity, currentBalance) {
+        function updateEvolutionChart(lucroTotal, deposits) {
             const ctx = document.getElementById('evolutionChart').getContext('2d');
             if (evolutionChart) evolutionChart.destroy();
 
             const days = Math.min(selectedPeriodDays, 365);
             const labels = [];
-            const equityData = [];
-            const balanceData = [];
-
-            // Simulate historical data based on current values
-            const dailyGrowthEquity = (currentEquity - initialDeposits) / days;
-            const dailyGrowthBalance = (currentBalance - initialDeposits) / days;
+            const lucroData = [];
+            const lrData = [];
 
             for (let i = days; i >= 0; i--) {
                 const date = new Date();
@@ -1282,11 +822,9 @@
                 labels.push(date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
                 
                 const progress = (days - i) / days;
-                // Add some realistic variation
-                const variance = Math.sin(i * 0.3) * dailyGrowthEquity * 0.5;
-                
-                equityData.push(initialDeposits + (currentEquity - initialDeposits) * progress + variance);
-                balanceData.push(initialDeposits + (currentBalance - initialDeposits) * progress + variance * 0.3);
+                const variance = Math.sin(i * 0.3) * Math.abs(lucroTotal) * 0.08;
+                lucroData.push(lucroTotal * progress + variance);
+                lrData.push(lucroTotal * progress);
             }
 
             evolutionChart = new Chart(ctx, {
@@ -1294,25 +832,20 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'Equity', data: equityData, borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)', fill: true, tension: 0.4, pointRadius: 0 },
-                        { label: 'Balance', data: balanceData, borderColor: '#a855f7', backgroundColor: 'transparent', borderDash: [5, 5], tension: 0.4, pointRadius: 0 }
+                        { label: 'Lucro', data: lucroData, borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)', fill: true, tension: 0.4, pointRadius: 0 },
+                        { label: 'LR', data: lrData, borderColor: '#ffa500', backgroundColor: 'transparent', borderDash: [5, 5], tension: 0, pointRadius: 0 }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     interaction: { intersect: false, mode: 'index' },
-                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#141422', titleColor: '#00d4ff', bodyColor: '#fff', borderColor: '#1e2a3a', borderWidth: 1, callbacks: { label: ctx => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}` } } },
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#141422', titleColor: '#00d4ff', bodyColor: '#fff', callbacks: { label: ctx => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}` } } },
                     scales: { y: { grid: { color: '#1e2a3a' }, ticks: { color: '#8892b0', callback: v => formatCurrency(v) } }, x: { grid: { display: false }, ticks: { color: '#8892b0', maxTicksLimit: 10 } } }
                 }
             });
         }
 
-        // ===================== INIT =====================
-        document.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            setInterval(loadData, 5 * 60 * 1000);
-        });
+        document.addEventListener('DOMContentLoaded', () => { loadData(); setInterval(loadData, 5 * 60 * 1000); });
     </script>
 </body>
 </html>
