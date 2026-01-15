@@ -608,11 +608,10 @@
                     
                     const name = String(accountName).trim();
                     
-                    // Ignorar linhas de sistema
+                    // Ignorar linhas de sistema (marcadores de ano, headers, etc)
                     if (name === '' || name === 'CONTA' || name === 'TOTAL' || 
                         name.includes('RETORNOS') || name.includes('Atualizado') ||
-                        name.includes('📅') || name === '2025' || name === '2026' ||
-                        name.includes('2025') || name.includes('2026')) {
+                        name.startsWith('📅')) {
                         return null;
                     }
                     
@@ -644,51 +643,68 @@
                     return { account: name, months, total };
                 }
                 
-                // Encontrar onde está o marcador de 2026
+                // Estrutura da aba Retornos:
+                // Row 0: Título | Row 1: Subtítulo | Row 2: vazio | Row 3: Headers
+                // Row 4: "📅 2025" | Rows 5-34: Contas 2025 (30 linhas)
+                // Row 35: vazio | Row 36: "📅 2026" | Rows 37-66: Contas 2026 (30 linhas)
+                
+                // Encontrar marcadores de ano dinamicamente
+                let year2025Start = -1;
                 let year2026Start = -1;
+                
                 for (let i = 0; i < rows.length; i++) {
                     const row = rows[i];
                     if (row && row.c && row.c[0]) {
                         const val = String(row.c[0].v || '');
-                        if (val.includes('2026')) {
+                        if (val.includes('2025') && year2025Start === -1) {
+                            year2025Start = i;
+                            console.log(`>>> Marcador 2025 encontrado no índice ${i}: "${val}"`);
+                        }
+                        if (val.includes('2026') && year2026Start === -1) {
                             year2026Start = i;
-                            console.log(`>>> Marcador 2026 encontrado no índice ${i}`);
-                            break;
+                            console.log(`>>> Marcador 2026 encontrado no índice ${i}: "${val}"`);
                         }
                     }
                 }
                 
-                // Se não encontrou 2026, assumir que está no índice 30 (baseado nos logs anteriores)
-                if (year2026Start === -1) {
-                    year2026Start = 30;
-                    console.log('>>> Marcador 2026 não encontrado, usando índice padrão 30');
+                // Fallback para índices padrão baseados na estrutura do GS
+                if (year2025Start === -1) {
+                    year2025Start = 4; // Row 5 (índice 4) no GS
+                    console.log('>>> Marcador 2025 não encontrado, usando índice padrão 4');
                 }
-                
-                // 2025: do índice 5 até year2026Start-1
-                // 2026: do índice year2026Start+1 até o fim
+                if (year2026Start === -1) {
+                    year2026Start = 36; // Row 37 (índice 36) no GS
+                    console.log('>>> Marcador 2026 não encontrado, usando índice padrão 36');
+                }
                 
                 const seen2025 = new Set();
                 const seen2026 = new Set();
                 
-                // Extrair 2025 (índices 5 até year2026Start-1)
-                console.log(`>>> Extraindo 2025: índices 5 a ${year2026Start - 1}`);
-                for (let i = 5; i < year2026Start; i++) {
+                // Extrair 2025: do marcador+1 até o marcador de 2026-1
+                const start2025 = year2025Start + 1;
+                const end2025 = year2026Start;
+                console.log(`>>> Extraindo 2025: índices ${start2025} a ${end2025 - 1}`);
+                
+                for (let i = start2025; i < end2025; i++) {
                     const accountData = extractAccountData(rows[i]);
                     if (accountData && !seen2025.has(accountData.account)) {
                         seen2025.add(accountData.account);
                         returnsData[2025].push(accountData);
-                        console.log(`  2025[${i}]: ${accountData.account} - Total: $${accountData.total}`);
+                        console.log(`  2025[${i}]: ${accountData.account} - Total: $${accountData.total.toFixed(2)}`);
                     }
                 }
                 
-                // Extrair 2026 (índices year2026Start+1 até o fim)
-                console.log(`>>> Extraindo 2026: índices ${year2026Start + 1} em diante`);
-                for (let i = year2026Start + 1; i < rows.length; i++) {
+                // Extrair 2026: do marcador+1 até o fim (máximo 30 linhas)
+                const start2026 = year2026Start + 1;
+                const end2026 = Math.min(rows.length, start2026 + 30);
+                console.log(`>>> Extraindo 2026: índices ${start2026} a ${end2026 - 1}`);
+                
+                for (let i = start2026; i < end2026; i++) {
                     const accountData = extractAccountData(rows[i]);
                     if (accountData && !seen2026.has(accountData.account)) {
                         seen2026.add(accountData.account);
                         returnsData[2026].push(accountData);
-                        console.log(`  2026[${i}]: ${accountData.account} - Total: $${accountData.total}`);
+                        console.log(`  2026[${i}]: ${accountData.account} - Total: $${accountData.total.toFixed(2)}`);
                     }
                 }
                 
