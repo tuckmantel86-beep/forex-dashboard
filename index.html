@@ -324,17 +324,17 @@
                 <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-label">Patrimônio Total</div><div class="kpi-value cyan" id="kpiEquity">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">💼</div><div class="kpi-label">Saldo Total</div><div class="kpi-value purple" id="kpiBalance">$0</div></div>
                 <div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-label">Flutuante</div><div class="kpi-value" id="kpiFloating">$0</div><div class="kpi-sub" id="kpiFloatingPct" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
-                <div class="kpi-card"><div class="kpi-icon">📅</div><div class="kpi-label">Lucro Ano</div><div class="kpi-value green" id="kpiProfitYear">$0</div></div>
-                <div class="kpi-card"><div class="kpi-icon">💵</div><div class="kpi-label">Lucro Total</div><div class="kpi-value green" id="kpiProfitTotal">$0</div></div>
+                <div class="kpi-card"><div class="kpi-icon">📅</div><div class="kpi-label">Lucro Ano</div><div class="kpi-value green" id="kpiProfitYear">$0</div><div class="kpi-sub" id="kpiProfitYearPct" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
+                <div class="kpi-card"><div class="kpi-icon">💵</div><div class="kpi-label">Lucro Total</div><div class="kpi-value green" id="kpiProfitTotal">$0</div><div class="kpi-sub" id="kpiProfitTotalPct" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
                 <div class="kpi-card"><div class="kpi-icon">🔢</div><div class="kpi-label">Contas Ativas</div><div class="kpi-value orange" id="kpiAccounts">0</div></div>
             </div>
 
             <div class="period-section">
-                <div class="period-card"><div class="period-label">Hoje</div><div class="period-value" id="profitToday">$0</div></div>
-                <div class="period-card"><div class="period-label">Semana</div><div class="period-value" id="profitWeek">$0</div></div>
-                <div class="period-card"><div class="period-label">Mês</div><div class="period-value" id="profitMonth">$0</div></div>
-                <div class="period-card"><div class="period-label">Ano</div><div class="period-value" id="profitYear">$0</div></div>
-                <div class="period-card"><div class="period-label">Total</div><div class="period-value" id="profitTotal">$0</div></div>
+                <div class="period-card"><div class="period-label">Hoje</div><div class="period-value" id="profitToday">$0</div><div class="period-sub" id="profitTodayPct" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
+                <div class="period-card"><div class="period-label">Semana</div><div class="period-value" id="profitWeek">$0</div><div class="period-sub" id="profitWeekPct" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
+                <div class="period-card"><div class="period-label">Mês</div><div class="period-value" id="profitMonth">$0</div><div class="period-sub" id="profitMonthPct" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
+                <div class="period-card"><div class="period-label">Ano</div><div class="period-value" id="profitYear">$0</div><div class="period-sub" id="profitYearPct" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
+                <div class="period-card"><div class="period-label">Total</div><div class="period-value" id="profitTotal">$0</div><div class="period-sub" id="profitTotalPct" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem;">0% do portfólio</div></div>
             </div>
 
             <div class="dashboard-grid">
@@ -739,21 +739,43 @@
             const floatEl = document.getElementById('kpiFloating');
             floatEl.textContent = formatCurrency(totals.floating);
             floatEl.className = `kpi-value ${totals.floating >= 0 ? 'green' : 'red'}`;
-            // Calcular % do portfólio (floating / balance * 100)
-            const floatingPct = totals.balance > 0 ? (totals.floating / totals.balance) * 100 : 0;
-            const floatingPctEl = document.getElementById('kpiFloatingPct');
-            const sign = floatingPct >= 0 ? '+' : '';
-            floatingPctEl.textContent = `${sign}${floatingPct.toFixed(2)}% do portfólio`;
-            floatingPctEl.style.color = floatingPct >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            
+            // Função helper para calcular e aplicar porcentagem
+            function applyPctStyle(elementId, value, baseValue) {
+                const pct = baseValue > 0 ? (value / baseValue) * 100 : 0;
+                const el = document.getElementById(elementId);
+                const sign = pct >= 0 ? '+' : '';
+                el.textContent = `${sign}${pct.toFixed(2)}% do portfólio`;
+                el.style.color = pct >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            }
+            
+            // Flutuante % do portfólio
+            applyPctStyle('kpiFloatingPct', totals.floating, totals.balance);
+            
+            // Lucro Ano
             document.getElementById('kpiProfitYear').textContent = formatCurrency(totals.profitYear);
+            applyPctStyle('kpiProfitYearPct', totals.profitYear, totals.balance);
+            
+            // Lucro Total
             document.getElementById('kpiProfitTotal').textContent = formatCurrency(totals.profitTotal);
+            applyPctStyle('kpiProfitTotalPct', totals.profitTotal, totals.balance);
+            
             document.getElementById('kpiAccounts').textContent = accountsData.length;
 
-            ['profitToday', 'profitWeek', 'profitMonth', 'profitYear', 'profitTotal'].forEach((id, i) => {
-                const vals = [totals.profitDay, totals.profitWeek, totals.profitMonth, totals.profitYear, totals.profitTotal];
-                const el = document.getElementById(id);
-                el.textContent = formatCurrency(vals[i]);
-                el.className = `period-value ${vals[i] >= 0 ? 'positive' : 'negative'}`;
+            // Period cards com porcentagens
+            const periodData = [
+                { id: 'profitToday', pctId: 'profitTodayPct', value: totals.profitDay },
+                { id: 'profitWeek', pctId: 'profitWeekPct', value: totals.profitWeek },
+                { id: 'profitMonth', pctId: 'profitMonthPct', value: totals.profitMonth },
+                { id: 'profitYear', pctId: 'profitYearPct', value: totals.profitYear },
+                { id: 'profitTotal', pctId: 'profitTotalPct', value: totals.profitTotal }
+            ];
+            
+            periodData.forEach(p => {
+                const el = document.getElementById(p.id);
+                el.textContent = formatCurrency(p.value);
+                el.className = `period-value ${p.value >= 0 ? 'positive' : 'negative'}`;
+                applyPctStyle(p.pctId, p.value, totals.balance);
             });
 
             updateAccountsTable();
